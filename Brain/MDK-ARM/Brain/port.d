@@ -1,0 +1,13 @@
+brain\port.o: ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F/port.c
+brain\port.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h
+brain\port.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
+brain\port.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+brain\port.o: ../Inc/FreeRTOSConfig.h
+brain\port.o: ../Inc/mxconstants.h
+brain\port.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h
+brain\port.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h
+brain\port.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/deprecated_definitions.h
+brain\port.o: ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F/portmacro.h
+brain\port.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h
+brain\port.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/task.h
+brain\port.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/list.h
