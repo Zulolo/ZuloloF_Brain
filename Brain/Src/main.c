@@ -45,7 +45,6 @@
 #include "usart.h"
 #include "usb_device.h"
 #include "gpio.h"
-#include "global.h"
 
 /* USER CODE BEGIN Includes */
 

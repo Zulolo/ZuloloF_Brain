@@ -206,10 +206,7 @@ void HAL_ADC_MspInit(ADC_HandleTypeDef* hadc)
     hdma_adc3.Init.MemDataAlignment = DMA_MDATAALIGN_HALFWORD;
     hdma_adc3.Init.Mode = DMA_NORMAL;
     hdma_adc3.Init.Priority = DMA_PRIORITY_LOW;
-    hdma_adc3.Init.FIFOMode = DMA_FIFOMODE_ENABLE;
-    hdma_adc3.Init.FIFOThreshold = DMA_FIFO_THRESHOLD_FULL;
-    hdma_adc3.Init.MemBurst = DMA_MBURST_SINGLE;
-    hdma_adc3.Init.PeriphBurst = DMA_PBURST_SINGLE;
+    hdma_adc3.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
     HAL_DMA_Init(&hdma_adc3);
 
     __HAL_LINKDMA(hadc,DMA_Handle,hdma_adc3);
