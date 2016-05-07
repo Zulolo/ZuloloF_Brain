@@ -47,13 +47,15 @@
 #include "gpio.h"
 
 /* USER CODE BEGIN Includes */
-
+#include "global.h"
+#include "main.h"
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
+uint32_t unMotorSpeedADC_Buf[MOTOR_SPEED_ADC_BUF_LEN];
 
 /* USER CODE END PV */
 
@@ -69,11 +71,11 @@ void MX_FREERTOS_Init(void);
 /* USER CODE BEGIN 0 */
 void blinkDemoLED(void const * argument)
 {
-	for(;;)
-	{
+  for(;;)
+  {
     HAL_GPIO_TogglePin(GPIO_DEMO_LED_PORT, DEMO_LED_Pin);
     osDelay(1000);
-	}
+  }
 }
 
 /* USER CODE END 0 */
@@ -114,7 +116,8 @@ int main(void)
   MX_USART3_UART_Init();
 
   /* USER CODE BEGIN 2 */
-
+  HAL_ADC_Start(&hadc3);
+  HAL_ADC_Start_DMA(&hadc3, unMotorSpeedADC_Buf, MOTOR_SPEED_ADC_BUF_LEN);
   /* USER CODE END 2 */
 
   /* Call init function for freertos objects (in freertos.c) */
