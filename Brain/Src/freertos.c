@@ -45,7 +45,7 @@ osThreadId defaultTaskHandle;
 osThreadId myDEMO_LED_TaskHandle;
 
 /* USER CODE BEGIN Variables */
-
+osThreadId myMotorCtrlHandle;
 /* USER CODE END Variables */
 
 /* Function prototypes -------------------------------------------------------*/
@@ -57,7 +57,7 @@ extern void MX_USB_DEVICE_Init(void);
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
 /* USER CODE BEGIN FunctionPrototypes */
-
+extern void MTR_ctrlMotor(void const * argument);
 /* USER CODE END FunctionPrototypes */
 
 /* Hook prototypes */
@@ -92,6 +92,8 @@ void MX_FREERTOS_Init(void) {
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
+  osThreadDef(myMotorCtrlTask, MTR_ctrlMotor, osPriorityHigh, 0, 256);
+  myMotorCtrlHandle = osThreadCreate(osThread(myMotorCtrlTask), NULL);
   /* USER CODE END RTOS_THREADS */
 
   /* USER CODE BEGIN RTOS_QUEUES */

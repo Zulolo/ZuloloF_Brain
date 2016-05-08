@@ -39,7 +39,9 @@
 #include "dma.h"
 
 /* USER CODE BEGIN 0 */
-
+//#include "main.h"
+//#include "motor.h"
+extern void MTR_giveMotorSpeedADC_Sem(struct __DMA_HandleTypeDef * hdma);
 /* USER CODE END 0 */
 
 ADC_HandleTypeDef hadc1;
@@ -212,7 +214,7 @@ void HAL_ADC_MspInit(ADC_HandleTypeDef* hadc)
     __HAL_LINKDMA(hadc,DMA_Handle,hdma_adc3);
 
   /* USER CODE BEGIN ADC3_MspInit 1 */
-
+    hdma_adc3.XferCpltCallback = MTR_giveMotorSpeedADC_Sem;
   /* USER CODE END ADC3_MspInit 1 */
   }
 }

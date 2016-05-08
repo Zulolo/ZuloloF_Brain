@@ -82,4 +82,5 @@ brain\main.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
 brain\main.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
 brain\main.o: ../Inc/gpio.h
 brain\main.o: ../Inc/global.h
+brain\main.o: ../Inc/motor.h
 brain\main.o: ../Inc/main.h

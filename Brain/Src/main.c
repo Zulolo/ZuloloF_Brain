@@ -47,7 +47,9 @@
 #include "gpio.h"
 
 /* USER CODE BEGIN Includes */
+#define __USED_BY_MAIN__
 #include "global.h"
+#include "motor.h"
 #include "main.h"
 /* USER CODE END Includes */
 
@@ -55,7 +57,7 @@
 
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
-uint32_t unMotorSpeedADC_Buf[MOTOR_SPEED_ADC_BUF_LEN];
+
 
 /* USER CODE END PV */
 
@@ -73,9 +75,21 @@ void blinkDemoLED(void const * argument)
 {
   for(;;)
   {
-    HAL_GPIO_TogglePin(GPIO_DEMO_LED_PORT, DEMO_LED_Pin);
+    if (ERROR == tErrorStatus)
+    {
+      HAL_GPIO_WritePin(GPIO_DEMO_LED_PORT, DEMO_LED_Pin, GPIO_PIN_RESET);
+    }
+    else
+    {
+      HAL_GPIO_TogglePin(GPIO_DEMO_LED_PORT, DEMO_LED_Pin);
+    }
     osDelay(1000);
   }
+}
+
+void M_handleErr(void)
+{
+	tErrorStatus = ERROR;
 }
 
 /* USER CODE END 0 */
@@ -117,7 +131,13 @@ int main(void)
 
   /* USER CODE BEGIN 2 */
   HAL_ADC_Start(&hadc3);
-  HAL_ADC_Start_DMA(&hadc3, unMotorSpeedADC_Buf, MOTOR_SPEED_ADC_BUF_LEN);
+  HAL_ADC_Start_DMA(&hadc3, unMotorSpeedADC_Buf, MOTOR_SPEED_ADC_DMA_DEPTH);
+
+  MTR_tMotorSpeedChangedSemaphore = xSemaphoreCreateCounting(MTR_SPD_CHNG_SEM_MAX, 0);
+  if (NULL == MTR_tMotorSpeedChangedSemaphore)
+  {
+    M_handleErr();
+  }
   /* USER CODE END 2 */
 
   /* Call init function for freertos objects (in freertos.c) */

@@ -600,6 +600,26 @@
               <FileType>1</FileType>
               <FilePath>../Src/spi.c</FilePath>
             </File>
+            <File>
+              <FileName>motor.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Src\motor.c</FilePath>
+            </File>
+            <File>
+              <FileName>rf.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Src\rf.c</FilePath>
+            </File>
+            <File>
+              <FileName>ahrs.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Src\ahrs.c</FilePath>
+            </File>
+            <File>
+              <FileName>routine.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Src\routine.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
