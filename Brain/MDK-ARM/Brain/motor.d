@@ -81,5 +81,6 @@ brain\motor.o: ../Inc/usbd_conf.h
 brain\motor.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
 brain\motor.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
 brain\motor.o: ../Inc/gpio.h
+brain\motor.o: ../Inc/global.h
 brain\motor.o: ../Inc/motor.h
 brain\motor.o: ../Inc/main.h

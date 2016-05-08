@@ -15,6 +15,7 @@
 #include "gpio.h"
 
 #define __USED_BY_MOTOR__
+#include "global.h"
 #include "motor.h"
 #include "main.h"
 
@@ -46,7 +47,7 @@ void MTR_calculateMotorSpeedADC(void)
   uint32_t unADC_Avg = 0;
   for (unIndex = 0; unIndex < MOTOR_SPEED_ADC_DMA_DEPTH; unIndex++)
   {
-    unADC_Avg += unMotorSpeedADC_Buf[unIndex];
+    unADC_Avg += unMotorSpeedADC_Buf[unIndex] & ADC_12BIT_MASK;
   }
   unMotorSpeedADC_Avg = unADC_Avg / MOTOR_SPEED_ADC_DMA_DEPTH;
 }
