@@ -18,14 +18,25 @@
 #include "motor.h"
 #include "main.h"
 
-void MTR_giveMotorSpeedADC_Sem(struct __DMA_HandleTypeDef * hdma)
+//void MTR_giveMotorSpeedADC_Sem(struct __DMA_HandleTypeDef * hdma)
+//{
+//  static portBASE_TYPE xHigherPriorityTaskWoken;
+//  xHigherPriorityTaskWoken = pdFALSE;
+//  xSemaphoreGiveFromISR(MTR_tMotorSpeedChangedSemaphore, &xHigherPriorityTaskWoken);
+//  if(xHigherPriorityTaskWoken == pdTRUE)
+//  {
+//	  portEND_SWITCHING_ISR(xHigherPriorityTaskWoken);
+//  }
+//}
+
+void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc)
 {
   static portBASE_TYPE xHigherPriorityTaskWoken;
   xHigherPriorityTaskWoken = pdFALSE;
   xSemaphoreGiveFromISR(MTR_tMotorSpeedChangedSemaphore, &xHigherPriorityTaskWoken);
   if(xHigherPriorityTaskWoken == pdTRUE)
   {
-	  portEND_SWITCHING_ISR(xHigherPriorityTaskWoken);
+    portEND_SWITCHING_ISR(xHigherPriorityTaskWoken);
   }
 }
 

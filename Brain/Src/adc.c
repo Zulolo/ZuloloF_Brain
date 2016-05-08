@@ -214,7 +214,7 @@ void HAL_ADC_MspInit(ADC_HandleTypeDef* hadc)
     __HAL_LINKDMA(hadc,DMA_Handle,hdma_adc3);
 
   /* USER CODE BEGIN ADC3_MspInit 1 */
-    hdma_adc3.XferCpltCallback = MTR_giveMotorSpeedADC_Sem;
+
   /* USER CODE END ADC3_MspInit 1 */
   }
 }

@@ -130,6 +130,8 @@ int main(void)
   MX_USART3_UART_Init();
 
   /* USER CODE BEGIN 2 */
+  tErrorStatus = SUCCESS;
+  HAL_GPIO_WritePin(GPIO_DEMO_LED_PORT, DEMO_LED_Pin, GPIO_PIN_SET);
   HAL_ADC_Start(&hadc3);
   HAL_ADC_Start_DMA(&hadc3, unMotorSpeedADC_Buf, MOTOR_SPEED_ADC_DMA_DEPTH);
 
