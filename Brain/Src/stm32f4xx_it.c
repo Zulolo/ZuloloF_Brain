@@ -37,12 +37,13 @@
 #include "cmsis_os.h"
 
 /* USER CODE BEGIN 0 */
-
+extern osSemaphoreId RTN_tNeedToUpdateMotorHandle;
 /* USER CODE END 0 */
 
 /* External variables --------------------------------------------------------*/
 extern PCD_HandleTypeDef hpcd_USB_OTG_FS;
 extern DMA_HandleTypeDef hdma_adc3;
+extern TIM_HandleTypeDef htim6;
 extern TIM_HandleTypeDef htim13;
 
 extern TIM_HandleTypeDef htim1;
@@ -192,6 +193,25 @@ void TIM8_UP_TIM13_IRQHandler(void)
   /* USER CODE BEGIN TIM8_UP_TIM13_IRQn 1 */
 
   /* USER CODE END TIM8_UP_TIM13_IRQn 1 */
+}
+
+/**
+* @brief This function handles TIM6 global interrupt, DAC1 and DAC2 underrun error interrupts.
+*/
+void TIM6_DAC_IRQHandler(void)
+{
+  /* USER CODE BEGIN TIM6_DAC_IRQn 0 */
+	static portBASE_TYPE tHigherPriorityTaskWoken;
+  /* USER CODE END TIM6_DAC_IRQn 0 */
+  HAL_TIM_IRQHandler(&htim6);
+  /* USER CODE BEGIN TIM6_DAC_IRQn 1 */
+	tHigherPriorityTaskWoken = pdFALSE;
+	xSemaphoreGiveFromISR(RTN_tNeedToUpdateMotorHandle, &tHigherPriorityTaskWoken);
+	if(tHigherPriorityTaskWoken == pdTRUE)
+	{
+		portEND_SWITCHING_ISR(tHigherPriorityTaskWoken);
+	}
+  /* USER CODE END TIM6_DAC_IRQn 1 */
 }
 
 /**

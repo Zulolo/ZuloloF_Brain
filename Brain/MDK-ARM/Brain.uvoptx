@@ -201,66 +201,18 @@
         <Bp>
           <Number>0</Number>
           <Type>0</Type>
-          <LineNumber>127</LineNumber>
+          <LineNumber>206</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>134227456</Address>
+          <Address>134229294</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
           <SizeOfObject>0</SizeOfObject>
           <BreakByAccess>0</BreakByAccess>
           <BreakIfRCount>1</BreakIfRCount>
-          <Filename>../Src/adc.c</Filename>
+          <Filename>../Src/stm32f4xx_it.c</Filename>
           <ExecCommand></ExecCommand>
-          <Expression>\\Brain\../Src/adc.c\127</Expression>
-        </Bp>
-        <Bp>
-          <Number>1</Number>
-          <Type>0</Type>
-          <LineNumber>134</LineNumber>
-          <EnabledFlag>1</EnabledFlag>
-          <Address>134227474</Address>
-          <ByteObject>0</ByteObject>
-          <HtxType>0</HtxType>
-          <ManyObjects>0</ManyObjects>
-          <SizeOfObject>0</SizeOfObject>
-          <BreakByAccess>0</BreakByAccess>
-          <BreakIfRCount>1</BreakIfRCount>
-          <Filename>../Src/adc.c</Filename>
-          <ExecCommand></ExecCommand>
-          <Expression>\\Brain\../Src/adc.c\134</Expression>
-        </Bp>
-        <Bp>
-          <Number>2</Number>
-          <Type>0</Type>
-          <LineNumber>327</LineNumber>
-          <EnabledFlag>1</EnabledFlag>
-          <Address>134219632</Address>
-          <ByteObject>0</ByteObject>
-          <HtxType>0</HtxType>
-          <ManyObjects>0</ManyObjects>
-          <SizeOfObject>0</SizeOfObject>
-          <BreakByAccess>0</BreakByAccess>
-          <BreakIfRCount>1</BreakIfRCount>
-          <Filename>../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_adc.c</Filename>
-          <ExecCommand></ExecCommand>
-          <Expression>\\Brain\../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_adc.c\327</Expression>
-        </Bp>
-        <Bp>
-          <Number>3</Number>
-          <Type>0</Type>
-          <LineNumber>1360</LineNumber>
-          <EnabledFlag>1</EnabledFlag>
-          <Address>134219482</Address>
-          <ByteObject>0</ByteObject>
-          <HtxType>0</HtxType>
-          <ManyObjects>0</ManyObjects>
-          <SizeOfObject>0</SizeOfObject>
-          <BreakByAccess>0</BreakByAccess>
-          <BreakIfRCount>1</BreakIfRCount>
-          <Filename>../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_adc.c</Filename>
-          <ExecCommand></ExecCommand>
-          <Expression>\\Brain\../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_adc.c\1360</Expression>
+          <Expression>\\Brain\../Src/stm32f4xx_it.c\206</Expression>
         </Bp>
       </Breakpoint>
       <WatchWindow1>

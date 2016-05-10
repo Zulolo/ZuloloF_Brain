@@ -43,6 +43,10 @@
 /* Variables -----------------------------------------------------------------*/
 osThreadId defaultTaskHandle;
 osThreadId myDEMO_LED_TaskHandle;
+osThreadId myMotorCtrlTaskHandle;
+osThreadId myRoutineUpdateHandle;
+osSemaphoreId MTR_tMotorSpeedChangedSemaphoreHandle;
+osSemaphoreId RTN_tNeedToUpdateMotorHandle;
 
 /* USER CODE BEGIN Variables */
 osThreadId myMotorCtrlHandle;
@@ -51,13 +55,15 @@ osThreadId myMotorCtrlHandle;
 /* Function prototypes -------------------------------------------------------*/
 void StartDefaultTask(void const * argument);
 extern void blinkDemoLED(void const * argument);
+extern void MTR_ctrlMotor(void const * argument);
+extern void RTN_updateMotor(void const * argument);
 
 extern void MX_FATFS_Init(void);
 extern void MX_USB_DEVICE_Init(void);
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
 /* USER CODE BEGIN FunctionPrototypes */
-extern void MTR_ctrlMotor(void const * argument);
+
 /* USER CODE END FunctionPrototypes */
 
 /* Hook prototypes */
@@ -72,6 +78,15 @@ void MX_FREERTOS_Init(void) {
   /* USER CODE BEGIN RTOS_MUTEX */
   /* add mutexes, ... */
   /* USER CODE END RTOS_MUTEX */
+
+  /* Create the semaphores(s) */
+  /* definition and creation of MTR_tMotorSpeedChangedSemaphore */
+  osSemaphoreDef(MTR_tMotorSpeedChangedSemaphore);
+  MTR_tMotorSpeedChangedSemaphoreHandle = osSemaphoreCreate(osSemaphore(MTR_tMotorSpeedChangedSemaphore), 10);
+
+  /* definition and creation of RTN_tNeedToUpdateMotor */
+  osSemaphoreDef(RTN_tNeedToUpdateMotor);
+  RTN_tNeedToUpdateMotorHandle = osSemaphoreCreate(osSemaphore(RTN_tNeedToUpdateMotor), 10);
 
   /* USER CODE BEGIN RTOS_SEMAPHORES */
   /* add semaphores, ... */
@@ -90,10 +105,17 @@ void MX_FREERTOS_Init(void) {
   osThreadDef(myDEMO_LED_Task, blinkDemoLED, osPriorityLow, 0, 256);
   myDEMO_LED_TaskHandle = osThreadCreate(osThread(myDEMO_LED_Task), NULL);
 
+  /* definition and creation of myMotorCtrlTask */
+  osThreadDef(myMotorCtrlTask, MTR_ctrlMotor, osPriorityHigh, 0, 256);
+  myMotorCtrlTaskHandle = osThreadCreate(osThread(myMotorCtrlTask), NULL);
+
+  /* definition and creation of myRoutineUpdate */
+  osThreadDef(myRoutineUpdate, RTN_updateMotor, osPriorityNormal, 0, 256);
+  myRoutineUpdateHandle = osThreadCreate(osThread(myRoutineUpdate), NULL);
+
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
-  osThreadDef(myMotorCtrlTask, MTR_ctrlMotor, osPriorityHigh, 0, 256);
-  myMotorCtrlHandle = osThreadCreate(osThread(myMotorCtrlTask), NULL);
+
   /* USER CODE END RTOS_THREADS */
 
   /* USER CODE BEGIN RTOS_QUEUES */

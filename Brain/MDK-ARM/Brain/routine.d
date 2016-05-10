@@ -81,5 +81,6 @@ brain\routine.o: ../Inc/usbd_conf.h
 brain\routine.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
 brain\routine.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
 brain\routine.o: ../Inc/gpio.h
+brain\routine.o: ../Inc/global.h
 brain\routine.o: ../Inc/routine.h
 brain\routine.o: ../Inc/main.h

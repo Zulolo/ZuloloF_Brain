@@ -19,6 +19,8 @@
 #include "motor.h"
 #include "main.h"
 
+extern osSemaphoreId MTR_tMotorSpeedChangedSemaphoreHandle;
+static MotorStatus tMotorCtrl[MOTOR_NUMBER];
 //void MTR_giveMotorSpeedADC_Sem(struct __DMA_HandleTypeDef * hdma)
 //{
 //  static portBASE_TYPE xHigherPriorityTaskWoken;
@@ -32,31 +34,37 @@
 
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc)
 {
-  static portBASE_TYPE xHigherPriorityTaskWoken;
-  xHigherPriorityTaskWoken = pdFALSE;
-  xSemaphoreGiveFromISR(MTR_tMotorSpeedChangedSemaphore, &xHigherPriorityTaskWoken);
-  if(xHigherPriorityTaskWoken == pdTRUE)
-  {
-    portEND_SWITCHING_ISR(xHigherPriorityTaskWoken);
-  }
+	static portBASE_TYPE tHigherPriorityTaskWoken;
+	tHigherPriorityTaskWoken = pdFALSE;
+	xSemaphoreGiveFromISR(MTR_tMotorSpeedChangedSemaphoreHandle, &tHigherPriorityTaskWoken);
+	if(tHigherPriorityTaskWoken == pdTRUE)
+	{
+		portEND_SWITCHING_ISR(tHigherPriorityTaskWoken);
+	}
 }
 
-void MTR_calculateMotorSpeedADC(void)
+uint16_t MTR_calculateMotorSpeedADC(void)
 {
-  uint8_t unIndex;
-  uint32_t unADC_Avg = 0;
-  for (unIndex = 0; unIndex < MOTOR_SPEED_ADC_DMA_DEPTH; unIndex++)
-  {
-    unADC_Avg += unMotorSpeedADC_Buf[unIndex] & ADC_12BIT_MASK;
-  }
-  unMotorSpeedADC_Avg = unADC_Avg / MOTOR_SPEED_ADC_DMA_DEPTH;
+	uint8_t unIndex;
+	uint32_t unADC_Avg = 0;
+	for (unIndex = 0; unIndex < MOTOR_SPEED_ADC_DMA_DEPTH; unIndex++)
+	{
+		unADC_Avg += unMotorSpeedADC_Buf[unIndex] & ADC_12BIT_MASK;
+	}
+	return ((uint16_t)(unADC_Avg / MOTOR_SPEED_ADC_DMA_DEPTH));
 }
 
 void MTR_ctrlMotor(void const * argument)
 {
-  for(;;)
-  {
-    xSemaphoreTake(MTR_tMotorSpeedChangedSemaphore, portMAX_DELAY);
-    MTR_calculateMotorSpeedADC();
-  }
+	static uint16_t unMotorSpeedADC;
+	uint8_t unMotorIndex;
+	for(;;)
+	{
+		xSemaphoreTake(MTR_tMotorSpeedChangedSemaphoreHandle, portMAX_DELAY);
+		unMotorSpeedADC = MTR_calculateMotorSpeedADC();
+		for (unMotorIndex = 0; unMotorIndex < MOTOR_NUMBER; unMotorIndex++)
+		{
+			tMotorCtrl[unMotorIndex].unSpeedADC = unMotorSpeedADC;
+		}
+	}
 }
