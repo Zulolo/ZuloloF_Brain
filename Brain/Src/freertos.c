@@ -45,11 +45,11 @@ osThreadId defaultTaskHandle;
 osThreadId myDEMO_LED_TaskHandle;
 osThreadId myMotorCtrlTaskHandle;
 osThreadId myRoutineUpdateHandle;
-osSemaphoreId MTR_tMotorSpeedChangedSemaphoreHandle;
+osSemaphoreId MTR_tMotorSpeedChangedHandle;
 osSemaphoreId RTN_tNeedToUpdateMotorHandle;
 
 /* USER CODE BEGIN Variables */
-osThreadId myMotorCtrlHandle;
+
 /* USER CODE END Variables */
 
 /* Function prototypes -------------------------------------------------------*/
@@ -80,9 +80,9 @@ void MX_FREERTOS_Init(void) {
   /* USER CODE END RTOS_MUTEX */
 
   /* Create the semaphores(s) */
-  /* definition and creation of MTR_tMotorSpeedChangedSemaphore */
-  osSemaphoreDef(MTR_tMotorSpeedChangedSemaphore);
-  MTR_tMotorSpeedChangedSemaphoreHandle = osSemaphoreCreate(osSemaphore(MTR_tMotorSpeedChangedSemaphore), 10);
+  /* definition and creation of MTR_tMotorSpeedChanged */
+  osSemaphoreDef(MTR_tMotorSpeedChanged);
+  MTR_tMotorSpeedChangedHandle = osSemaphoreCreate(osSemaphore(MTR_tMotorSpeedChanged), 10);
 
   /* definition and creation of RTN_tNeedToUpdateMotor */
   osSemaphoreDef(RTN_tNeedToUpdateMotor);

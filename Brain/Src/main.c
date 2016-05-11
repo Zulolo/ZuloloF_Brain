@@ -92,6 +92,7 @@ void M_handleErr(void)
 	tErrorStatus = ERROR;
 }
 
+
 /* USER CODE END 0 */
 
 int main(void)
@@ -134,16 +135,13 @@ int main(void)
   /* USER CODE BEGIN 2 */
   tErrorStatus = SUCCESS;
   HAL_GPIO_WritePin(GPIO_DEMO_LED_PORT, DEMO_LED_Pin, GPIO_PIN_SET);
-//  HAL_ADC_Start(&hadc3);
-  HAL_ADC_Start_DMA(&hadc3, (uint32_t *)&unMotorSpeedADC_Buf, MOTOR_SPEED_ADC_DMA_DEPTH);
 
 //  MTR_tMotorSpeedChangedSemaphore = xSemaphoreCreateCounting(MTR_SPD_CHNG_SEM_MAX, 0);
 //  if (NULL == MTR_tMotorSpeedChangedSemaphore)
 //  {
 //    M_handleErr();
 //  }
-  HAL_TIM_Base_Start(&htim2);
-  HAL_TIM_Base_Start(&htim6);
+
   /* USER CODE END 2 */
 
   /* Call init function for freertos objects (in freertos.c) */

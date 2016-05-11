@@ -19,7 +19,7 @@
 #include "motor.h"
 #include "main.h"
 
-extern osSemaphoreId MTR_tMotorSpeedChangedSemaphoreHandle;
+extern osSemaphoreId MTR_tMotorSpeedChangedHandle;
 static MotorStatus tMotorCtrl[MOTOR_NUMBER];
 //void MTR_giveMotorSpeedADC_Sem(struct __DMA_HandleTypeDef * hdma)
 //{
@@ -36,7 +36,7 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc)
 {
 	static portBASE_TYPE tHigherPriorityTaskWoken;
 	tHigherPriorityTaskWoken = pdFALSE;
-	xSemaphoreGiveFromISR(MTR_tMotorSpeedChangedSemaphoreHandle, &tHigherPriorityTaskWoken);
+	xSemaphoreGiveFromISR(MTR_tMotorSpeedChangedHandle, &tHigherPriorityTaskWoken);
 	if(tHigherPriorityTaskWoken == pdTRUE)
 	{
 		portEND_SWITCHING_ISR(tHigherPriorityTaskWoken);
@@ -60,7 +60,7 @@ void MTR_ctrlMotor(void const * argument)
 	uint8_t unMotorIndex;
 	for(;;)
 	{
-		xSemaphoreTake(MTR_tMotorSpeedChangedSemaphoreHandle, portMAX_DELAY);
+		xSemaphoreTake(MTR_tMotorSpeedChangedHandle, portMAX_DELAY);
 		unMotorSpeedADC = MTR_calculateMotorSpeedADC();
 		for (unMotorIndex = 0; unMotorIndex < MOTOR_NUMBER; unMotorIndex++)
 		{
