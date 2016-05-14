@@ -3,22 +3,42 @@
 #define __MOTOR_H
 
 #ifdef __USED_BY_MOTOR__
-  #define __EXTERN_MOTOR__
+	#define __EXTERN_MOTOR__
+	typedef enum {
+		COMM_READ_MCR = 0,
+		COMM_READ_MSR,
+		COMM_READ_LOCATING_DUTY,
+		COMM_READ_RAMP_UP_DUTY,
+		COMM_READ_TARGET_DUTY,
+		COMM_READ_ACTUAL_DUTY,
+		COMM_READ_LOCATING_PERIOD,
+		COMM_READ_RESERVED_1,
+		COMM_READ_RAMP_UP_PERIOD_LOW,
+		COMM_READ_RAMP_UP_PERIOD_HIGH,
+		COMM_READ_ACTUAL_PERIOD_LOW,
+		COMM_READ_ACTUAL_PERIOD_HIGH,
+		COMM_READ_PHASE_CHANGE_CNT_LOW,
+		COMM_READ_PHASE_CHANGE_CNT_HIGH,
+		COMM_READ_RPM,
+		COMM_READ_BATTERY,
+		COMM_READ_CURRENT,
+		COMM_READ_RESERVE_2,
+		COMM_READ_MAX
+	} ENUM_COMM_READ_CMD;
+
 #else
-  #define __EXTERN_MOTOR__ extern
+	#define __EXTERN_MOTOR__ extern
 #endif
 
 #define MTR_SPD_CHNG_SEM_MAX		10
-
-typedef struct{
-	uint16_t unSpeedADC;
-}MotorStatus;
+#define MAX_MOTOR_COMM_LENGTH		3
 
 //__EXTERN_MOTOR__ QueueHandle_t MTR_tMotorSpeedChangedSemaphore;
 //__EXTERN_MOTOR__ void MTR_giveMotorSpeedADC_Sem(struct __DMA_HandleTypeDef * hdma);
 __EXTERN_MOTOR__ uint16_t MTR_calculateMotorSpeedADC(void);
 __EXTERN_MOTOR__ void MTR_ctrlMotor(void const * argument);
-
+__EXTERN_MOTOR__ void MTR_unUpdateMotorStatus(uint8_t unMotorIndex);
+__EXTERN_MOTOR__ MOTOR_UNION_T MTR_tMotor[MOTOR_NUMBER];
 #endif
 
 

@@ -20,7 +20,9 @@
 #include "main.h"
 
 extern osSemaphoreId MTR_tMotorSpeedChangedHandle;
-static MotorStatus tMotorCtrl[MOTOR_NUMBER];
+extern osSemaphoreId MTR_tMotorSPI_CommCpltHandle;
+extern osMessageQId MotorCommQueueHandle;
+
 //void MTR_giveMotorSpeedADC_Sem(struct __DMA_HandleTypeDef * hdma)
 //{
 //  static portBASE_TYPE xHigherPriorityTaskWoken;
@@ -31,6 +33,17 @@ static MotorStatus tMotorCtrl[MOTOR_NUMBER];
 //	  portEND_SWITCHING_ISR(xHigherPriorityTaskWoken);
 //  }
 //}
+
+void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi)
+{
+	static portBASE_TYPE tHigherPriorityTaskWoken;
+	tHigherPriorityTaskWoken = pdFALSE;
+	xSemaphoreGiveFromISR(MTR_tMotorSPI_CommCpltHandle, &tHigherPriorityTaskWoken);
+	if(tHigherPriorityTaskWoken == pdTRUE)
+	{
+		portEND_SWITCHING_ISR(tHigherPriorityTaskWoken);
+	}
+}
 
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc)
 {
@@ -64,7 +77,58 @@ void MTR_ctrlMotor(void const * argument)
 		unMotorSpeedADC = MTR_calculateMotorSpeedADC();
 		for (unMotorIndex = 0; unMotorIndex < MOTOR_NUMBER; unMotorIndex++)
 		{
-			tMotorCtrl[unMotorIndex].unSpeedADC = unMotorSpeedADC;
+			MTR_tMotor[unMotorIndex].structMotor.unSpeedADC = unMotorSpeedADC;
+		}
+	}
+}
+
+void MTR_unUpdateMotorStatus(uint8_t unMotorIndex)
+{
+	static MOTOR_SPI_COMM_T tMotorComm;
+
+	tMotorComm.unMotorIndex = unMotorIndex;
+	tMotorComm.unPayLoad[0] = COMM_READ_MSR;
+	if (xQueueSendToBack(MotorCommQueueHandle, &tMotorComm, portMAX_DELAY) != pdTRUE)
+	{
+		M_handleErr(NOT_USED_FOR_NOW);
+	}
+
+	tMotorComm.unPayLoad[0] = COMM_READ_RPM;
+	if (xQueueSendToBack(MotorCommQueueHandle, &tMotorComm, portMAX_DELAY) != pdTRUE)
+	{
+		M_handleErr(NOT_USED_FOR_NOW);
+	}
+
+	tMotorComm.unPayLoad[0] = COMM_READ_BATTERY;
+	if (xQueueSendToBack(MotorCommQueueHandle, &tMotorComm, portMAX_DELAY) != pdTRUE)
+	{
+		M_handleErr(NOT_USED_FOR_NOW);
+	}
+
+	tMotorComm.unPayLoad[0] = COMM_READ_CURRENT;
+	if (xQueueSendToBack(MotorCommQueueHandle, &tMotorComm, portMAX_DELAY) != pdTRUE)
+	{
+		M_handleErr(NOT_USED_FOR_NOW);
+	}
+}
+
+void MTR_MotorComm(void const * argument)
+{
+	static MOTOR_SPI_COMM_T tMotorComm;
+	static uint16_t unMotorCommRxBuffer[MAX_MOTOR_COMM_LENGTH + 1];
+	for(;;)
+	{
+		if (xQueueReceive(MotorCommQueueHandle, &tMotorComm, portMAX_DELAY) != pdTRUE)
+		{
+			M_handleErr(NOT_USED_FOR_NOW);
+		}
+		if(HAL_SPI_TransmitReceive_DMA(&hspi1, (uint8_t*)(tMotorComm.unPayLoad), (uint8_t *)unMotorCommRxBuffer, 3) != HAL_OK)
+		{
+			M_handleErr(NOT_USED_FOR_NOW);
+		}
+		if (xSemaphoreTake(MTR_tMotorSPI_CommCpltHandle, portMAX_DELAY) != pdTRUE)
+		{
+			M_handleErr(NOT_USED_FOR_NOW);
 		}
 	}
 }

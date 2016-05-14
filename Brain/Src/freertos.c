@@ -37,7 +37,7 @@
 #include "cmsis_os.h"
 
 /* USER CODE BEGIN Includes */     
-
+#include "global.h"
 /* USER CODE END Includes */
 
 /* Variables -----------------------------------------------------------------*/
@@ -45,8 +45,11 @@ osThreadId defaultTaskHandle;
 osThreadId myDEMO_LED_TaskHandle;
 osThreadId myMotorCtrlTaskHandle;
 osThreadId myRoutineUpdateHandle;
+osThreadId myMotorCommTaskHandle;
+osMessageQId MotorCommQueueHandle;
 osSemaphoreId MTR_tMotorSpeedChangedHandle;
 osSemaphoreId RTN_tNeedToUpdateMotorHandle;
+osSemaphoreId MTR_tMotorSPI_CommCpltHandle;
 
 /* USER CODE BEGIN Variables */
 
@@ -57,6 +60,7 @@ void StartDefaultTask(void const * argument);
 extern void blinkDemoLED(void const * argument);
 extern void MTR_ctrlMotor(void const * argument);
 extern void RTN_updateMotor(void const * argument);
+extern void MTR_MotorComm(void const * argument);
 
 extern void MX_FATFS_Init(void);
 extern void MX_USB_DEVICE_Init(void);
@@ -88,6 +92,10 @@ void MX_FREERTOS_Init(void) {
   osSemaphoreDef(RTN_tNeedToUpdateMotor);
   RTN_tNeedToUpdateMotorHandle = osSemaphoreCreate(osSemaphore(RTN_tNeedToUpdateMotor), 10);
 
+  /* definition and creation of MTR_tMotorSPI_CommCplt */
+  osSemaphoreDef(MTR_tMotorSPI_CommCplt);
+  MTR_tMotorSPI_CommCpltHandle = osSemaphoreCreate(osSemaphore(MTR_tMotorSPI_CommCplt), 10);
+
   /* USER CODE BEGIN RTOS_SEMAPHORES */
   /* add semaphores, ... */
   /* USER CODE END RTOS_SEMAPHORES */
@@ -113,10 +121,19 @@ void MX_FREERTOS_Init(void) {
   osThreadDef(myRoutineUpdate, RTN_updateMotor, osPriorityNormal, 0, 256);
   myRoutineUpdateHandle = osThreadCreate(osThread(myRoutineUpdate), NULL);
 
+  /* definition and creation of myMotorCommTask */
+  osThreadDef(myMotorCommTask, MTR_MotorComm, osPriorityAboveNormal, 0, 256);
+  myMotorCommTaskHandle = osThreadCreate(osThread(myMotorCommTask), NULL);
+
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
 
   /* USER CODE END RTOS_THREADS */
+
+  /* Create the queue(s) */
+  /* definition and creation of MotorCommQueue */
+  osMessageQDef(MotorCommQueue, 64, MOTOR_SPI_COMM_T);
+  MotorCommQueueHandle = osMessageCreate(osMessageQ(MotorCommQueue), NULL);
 
   /* USER CODE BEGIN RTOS_QUEUES */
   /* add queues, ... */
