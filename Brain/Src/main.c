@@ -90,6 +90,7 @@ void blinkDemoLED(void const * argument)
 void M_handleErr(void)
 {
 	tErrorStatus = ERROR;
+	HAL_GPIO_WritePin(GPIO_DEMO_LED_PORT, DEMO_LED_Pin, GPIO_PIN_RESET);
 }
 
 

@@ -25,23 +25,19 @@ extern osSemaphoreId RTN_tNeedToUpdateMotorHandle;
 void RTN_updateMotor(void const * argument)
 {
 	uint8_t unMotorIndex;
-  HAL_ADC_Start_DMA(&hadc3, (uint32_t *)&unMotorSpeedADC_Buf, MOTOR_SPEED_ADC_DMA_DEPTH);
-  HAL_TIM_Base_Start(&htim2);
-  HAL_TIM_Base_Start_IT(&htim6);
+	HAL_ADC_Start_DMA(&hadc3, (uint32_t *)&unMotorSpeedADC_Buf, MOTOR_SPEED_ADC_DMA_DEPTH);
+	HAL_TIM_Base_Start(&htim2);
+	HAL_TIM_Base_Start_IT(&htim6);
 	for(;;)
 	{
 		xSemaphoreTake(RTN_tNeedToUpdateMotorHandle, portMAX_DELAY);
 		for (unMotorIndex = 0; unMotorIndex < MOTOR_NUMBER; unMotorIndex++)
 		{
-
+			if(HAL_SPI_TransmitReceive_DMA(&hspi1, (uint8_t*)aTxBuffer, (uint8_t *)aRxBuffer, BUFFERSIZE) != HAL_OK)
+			{
+				/* Transfer error in transmission process */
+				M_handleErr();
+			}
 		}
-	    if (ERROR == tErrorStatus)
-	    {
-	      HAL_GPIO_WritePin(GPIO_DEMO_LED_PORT, DEMO_LED_Pin, GPIO_PIN_RESET);
-	    }
-	    else
-	    {
-	      HAL_GPIO_TogglePin(GPIO_DEMO_LED_PORT, DEMO_LED_Pin);
-	    }
 	}
 }
