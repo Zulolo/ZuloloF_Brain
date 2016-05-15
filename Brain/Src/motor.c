@@ -111,10 +111,20 @@ void MTR_unUpdateMotorStatus(uint8_t unMotorIndex)
 		M_handleErr(NOT_USED_FOR_NOW);
 	}
 }
+BOOLEAN_T MTR_bIsReadCmd(MOTOR_SPI_COMM_T tMotorComm)
+{
+	return TRUE;
+}
+
+void MTR_parseReadData(MOTOR_SPI_COMM_T tMotorCommLast, uint16_t* pMotorCommRxBuffer)
+{
+
+}
 
 void MTR_MotorComm(void const * argument)
 {
-	static MOTOR_SPI_COMM_T tMotorComm;
+	static MOTOR_SPI_COMM_T tMotorComm = MTR_DUMMY_CMD_CONTENT;
+	static MOTOR_SPI_COMM_T tMotorCommLast = MTR_DUMMY_CMD_CONTENT;
 	static uint16_t unMotorCommRxBuffer[MAX_MOTOR_COMM_LENGTH + 1];
 	for(;;)
 	{
@@ -129,6 +139,32 @@ void MTR_MotorComm(void const * argument)
 		if (xSemaphoreTake(MTR_tMotorSPI_CommCpltHandle, portMAX_DELAY) != pdTRUE)
 		{
 			M_handleErr(NOT_USED_FOR_NOW);
+		}
+		// Comunication finished
+		if (MTR_bIsReadCmd(tMotorCommLast) == TRUE)
+		{
+			// The data read during this transaction is the read command's response
+			// analyze it
+			MTR_parseReadData(tMotorCommLast, unMotorCommRxBuffer);
+		}
+
+		if ((uxQueueMessagesWaiting(MotorCommQueueHandle) == 0) && (MTR_bIsReadCmd(tMotorComm) == TRUE))
+		{
+			// No communication any more,
+			// if last communication is one read command, send one dummy read to get last read result
+			if(HAL_SPI_TransmitReceive_DMA(&hspi1, (uint8_t*)(T_MOTOR_DUMMY_CMD.unPayLoad), (uint8_t *)unMotorCommRxBuffer, 3) != HAL_OK)
+			{
+				M_handleErr(NOT_USED_FOR_NOW);
+			}
+			tMotorCommLast = T_MOTOR_DUMMY_CMD;
+			if (xSemaphoreTake(MTR_tMotorSPI_CommCpltHandle, portMAX_DELAY) != pdTRUE)
+			{
+				M_handleErr(NOT_USED_FOR_NOW);
+			}
+		}
+		else
+		{
+			tMotorCommLast = tMotorComm;
 		}
 	}
 }

@@ -53,6 +53,12 @@ typedef struct
 	__IO uint16_t  unPayLoad[3];
 } MOTOR_SPI_COMM_T;
 
+typedef enum
+{
+	FALSE = 0,
+	TRUE = !FALSE
+} BOOLEAN_T;
+
 #endif
 
 

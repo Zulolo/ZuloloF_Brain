@@ -4,6 +4,9 @@
 
 #ifdef __USED_BY_MOTOR__
 	#define __EXTERN_MOTOR__
+	#define MTR_INVALID_MOTOR_CMD		0xFFFF
+	#define MTR_INVALID_MOTOR_INDEX		0xFFFF
+	#define MTR_DUMMY_CMD_CONTENT		{.unMotorIndex = MTR_INVALID_MOTOR_INDEX, .unPayLoad[0] = MTR_INVALID_MOTOR_CMD}
 	typedef enum {
 		COMM_READ_MCR = 0,
 		COMM_READ_MSR,
@@ -25,7 +28,7 @@
 		COMM_READ_RESERVE_2,
 		COMM_READ_MAX
 	} ENUM_COMM_READ_CMD;
-
+	const MOTOR_SPI_COMM_T T_MOTOR_DUMMY_CMD = MTR_DUMMY_CMD_CONTENT;
 #else
 	#define __EXTERN_MOTOR__ extern
 #endif
