@@ -111,28 +111,71 @@ void MTR_unUpdateMotorStatus(uint8_t unMotorIndex)
 		M_handleErr(NOT_USED_FOR_NOW);
 	}
 }
-BOOLEAN_T MTR_bIsReadCmd(MOTOR_SPI_COMM_T tMotorComm)
+
+void MTR_parseReadData(MOTOR_SPI_COMM_T* pMotorComm, uint16_t* pMotorCommRxBuffer)
 {
-	return TRUE;
+	// CRC check
+	if (HAL_SPI_GetError(&hspi1) == HAL_SPI_ERROR_NONE)
+	{
+		MTR_tMotor[pMotorComm->unMotorIndex].unValue[pMotorComm->unPayLoad[0]] = pMotorCommRxBuffer[0];
+	}
 }
 
-void MTR_parseReadData(MOTOR_SPI_COMM_T tMotorCommLast, uint16_t* pMotorCommRxBuffer)
+void sendDummyCMDtoRead(MOTOR_SPI_COMM_T* pMotorCommLast, uint16_t* pMotorCommRxBuffer)
 {
-
+	SELECT_MOTOR(pMotorCommLast->unMotorIndex);
+	if(HAL_SPI_TransmitReceive_DMA(&hspi1, (uint8_t*)(T_MOTOR_DUMMY_CMD.unPayLoad), (uint8_t *)pMotorCommRxBuffer,
+			MTR_COMM_RD_CMD_CNT - 1) != HAL_OK)
+	{
+		M_handleErr(NOT_USED_FOR_NOW);
+	}
+	else
+	{
+		if (xSemaphoreTake(MTR_tMotorSPI_CommCpltHandle, portMAX_DELAY) != pdTRUE)
+		{
+			M_handleErr(NOT_USED_FOR_NOW);
+		}
+		else
+		{
+			MTR_parseReadData(pMotorCommLast, pMotorCommRxBuffer);
+		}
+	}
+	DESELECT_MOTOR(pMotorCommLast->unMotorIndex);
+	*pMotorCommLast = T_MOTOR_DUMMY_CMD;
 }
 
+// If there is no other command need to send or the next command is send to another motor
+// and the last command is a read command, send one dummy command to this motor to retrieve read value
 void MTR_MotorComm(void const * argument)
 {
 	static MOTOR_SPI_COMM_T tMotorComm = MTR_DUMMY_CMD_CONTENT;
 	static MOTOR_SPI_COMM_T tMotorCommLast = MTR_DUMMY_CMD_CONTENT;
 	static uint16_t unMotorCommRxBuffer[MAX_MOTOR_COMM_LENGTH + 1];
+
+	DESELECT_ALL_MOTOR;
 	for(;;)
 	{
 		if (xQueueReceive(MotorCommQueueHandle, &tMotorComm, portMAX_DELAY) != pdTRUE)
 		{
 			M_handleErr(NOT_USED_FOR_NOW);
 		}
-		if(HAL_SPI_TransmitReceive_DMA(&hspi1, (uint8_t*)(tMotorComm.unPayLoad), (uint8_t *)unMotorCommRxBuffer, 3) != HAL_OK)
+		/*********************************************************/
+		/* ----======== Pre send command stage start ========----*/
+		// If this command belongs to a different motor and last time command is one read command
+		// DUMMY/Invalid command is already considered in IS_MTR_COMM_RD_CMD macro
+		if ((tMotorComm.unMotorIndex != tMotorCommLast.unMotorIndex) && IS_MTR_COMM_RD_CMD(tMotorCommLast.unPayLoad[0]))
+		{
+			sendDummyCMDtoRead(&tMotorCommLast, unMotorCommRxBuffer);
+		}
+		/* ----======== Pre send command stage end ========----*/
+		/*********************************************************/
+
+
+		/*********************************************************/
+		/* ----======== Send command stage start ========----*/
+		SELECT_MOTOR(tMotorComm.unMotorIndex);
+		if(HAL_SPI_TransmitReceive_DMA(&hspi1, (uint8_t*)(tMotorComm.unPayLoad), (uint8_t *)unMotorCommRxBuffer,
+				(IS_MTR_COMM_RD_CMD(tMotorComm.unPayLoad[0]) ? (MTR_COMM_RD_CMD_CNT - 1) : (MTR_COMM_WR_CMD_CNT - 1))) != HAL_OK)
 		{
 			M_handleErr(NOT_USED_FOR_NOW);
 		}
@@ -140,31 +183,36 @@ void MTR_MotorComm(void const * argument)
 		{
 			M_handleErr(NOT_USED_FOR_NOW);
 		}
-		// Comunication finished
-		if (MTR_bIsReadCmd(tMotorCommLast) == TRUE)
+		else
 		{
-			// The data read during this transaction is the read command's response
-			// analyze it
-			MTR_parseReadData(tMotorCommLast, unMotorCommRxBuffer);
+			// Communication finished, but the data read in this transaction belongs to last time's query
+			// Same motor, last time read command (not DUMMY/Invalid)
+			if (IS_MTR_COMM_RD_CMD(tMotorCommLast.unPayLoad[0]))
+			{
+				// analyze it
+				MTR_parseReadData(&tMotorCommLast, unMotorCommRxBuffer);
+			}
 		}
+		DESELECT_MOTOR(tMotorComm.unMotorIndex);
 
-		if ((uxQueueMessagesWaiting(MotorCommQueueHandle) == 0) && (MTR_bIsReadCmd(tMotorComm) == TRUE))
+		/* ----======== Send command stage end ========----*/
+		/*********************************************************/
+
+
+		/*********************************************************/
+		/* ----======== After send command stage start ========----*/
+		// There is no command anymore
+		if ((uxQueueMessagesWaiting(MotorCommQueueHandle) == 0) && (IS_MTR_COMM_RD_CMD(tMotorComm.unPayLoad[0])))
 		{
 			// No communication any more,
 			// if last communication is one read command, send one dummy read to get last read result
-			if(HAL_SPI_TransmitReceive_DMA(&hspi1, (uint8_t*)(T_MOTOR_DUMMY_CMD.unPayLoad), (uint8_t *)unMotorCommRxBuffer, 3) != HAL_OK)
-			{
-				M_handleErr(NOT_USED_FOR_NOW);
-			}
-			tMotorCommLast = T_MOTOR_DUMMY_CMD;
-			if (xSemaphoreTake(MTR_tMotorSPI_CommCpltHandle, portMAX_DELAY) != pdTRUE)
-			{
-				M_handleErr(NOT_USED_FOR_NOW);
-			}
+			sendDummyCMDtoRead(&tMotorCommLast, unMotorCommRxBuffer);
 		}
 		else
 		{
 			tMotorCommLast = tMotorComm;
 		}
+		/* ----======== After send command stage end ========----*/
+		/*********************************************************/
 	}
 }
