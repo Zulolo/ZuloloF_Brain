@@ -39,6 +39,7 @@ void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi)
 	static portBASE_TYPE tHigherPriorityTaskWoken;
 	tHigherPriorityTaskWoken = pdFALSE;
 	xSemaphoreGiveFromISR(MTR_tMotorSPI_CommCpltHandle, &tHigherPriorityTaskWoken);
+	MTR_tMotor[MTR_unMotorSelectedIndex].structMotor.unCommCNT++;
 	if(tHigherPriorityTaskWoken == pdTRUE)
 	{
 		portEND_SWITCHING_ISR(tHigherPriorityTaskWoken);

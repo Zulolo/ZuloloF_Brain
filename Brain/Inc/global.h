@@ -39,6 +39,7 @@ typedef struct
 	__IO uint16_t  unBattery;			/*!<  Battery Voltage  */
 	__IO uint16_t  unCurrent;			/*!<  Current  */
 	__IO uint16_t  unRESERVE_2;			//*!<  for 4 bytes align */
+	__IO uint32_t  unCommCNT;			//*!<  Received communication frame of this motor (including CRC error) */
 } MOTOR_T;
 
 typedef union

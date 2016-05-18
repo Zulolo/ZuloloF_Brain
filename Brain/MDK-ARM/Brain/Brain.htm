@@ -3,7 +3,7 @@
 <title>Static Call Graph - [Brain\Brain.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image Brain\Brain.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060061: Last Updated: Mon May 16 22:19:03 2016
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060061: Last Updated: Wed May 18 21:32:48 2016
 <BR><P>
 <H3>Maximum Stack Usage =        304 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -46,7 +46,7 @@ Function Pointers
  <LI><a href="#[4b]">DMA1_Stream7_IRQHandler</a> from startup_stm32f407xx.o(.text) referenced from startup_stm32f407xx.o(RESET)
  <LI><a href="#[54]">DMA2_Stream0_IRQHandler</a> from stm32f4xx_it.o(i.DMA2_Stream0_IRQHandler) referenced from startup_stm32f407xx.o(RESET)
  <LI><a href="#[55]">DMA2_Stream1_IRQHandler</a> from startup_stm32f407xx.o(.text) referenced from startup_stm32f407xx.o(RESET)
- <LI><a href="#[56]">DMA2_Stream2_IRQHandler</a> from startup_stm32f407xx.o(.text) referenced from startup_stm32f407xx.o(RESET)
+ <LI><a href="#[56]">DMA2_Stream2_IRQHandler</a> from stm32f4xx_it.o(i.DMA2_Stream2_IRQHandler) referenced from startup_stm32f407xx.o(RESET)
  <LI><a href="#[57]">DMA2_Stream3_IRQHandler</a> from stm32f4xx_it.o(i.DMA2_Stream3_IRQHandler) referenced from startup_stm32f407xx.o(RESET)
  <LI><a href="#[58]">DMA2_Stream4_IRQHandler</a> from startup_stm32f407xx.o(.text) referenced from startup_stm32f407xx.o(RESET)
  <LI><a href="#[60]">DMA2_Stream5_IRQHandler</a> from startup_stm32f407xx.o(.text) referenced from startup_stm32f407xx.o(RESET)
@@ -259,9 +259,6 @@ Global Symbols
 <BR>[Address Reference Count : 1]<UL><LI> startup_stm32f407xx.o(RESET)
 </UL>
 <P><STRONG><a name="[55]"></a>DMA2_Stream1_IRQHandler</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, startup_stm32f407xx.o(.text))
-<BR>[Address Reference Count : 1]<UL><LI> startup_stm32f407xx.o(RESET)
-</UL>
-<P><STRONG><a name="[56]"></a>DMA2_Stream2_IRQHandler</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, startup_stm32f407xx.o(.text))
 <BR>[Address Reference Count : 1]<UL><LI> startup_stm32f407xx.o(RESET)
 </UL>
 <P><STRONG><a name="[58]"></a>DMA2_Stream4_IRQHandler</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, startup_stm32f407xx.o(.text))
@@ -489,6 +486,13 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> startup_stm32f407xx.o(RESET)
 </UL>
+<P><STRONG><a name="[56]"></a>DMA2_Stream2_IRQHandler</STRONG> (Thumb, 6 bytes, Stack size 0 bytes, stm32f4xx_it.o(i.DMA2_Stream2_IRQHandler))
+<BR><BR>[Stack]<UL><LI>Max Depth = 24<LI>Call Chain = DMA2_Stream2_IRQHandler &rArr; HAL_DMA_IRQHandler
+</UL>
+<BR>[Calls]<UL><LI><a href="#[89]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_DMA_IRQHandler
+</UL>
+<BR>[Address Reference Count : 1]<UL><LI> startup_stm32f407xx.o(RESET)
+</UL>
 <P><STRONG><a name="[57]"></a>DMA2_Stream3_IRQHandler</STRONG> (Thumb, 6 bytes, Stack size 0 bytes, stm32f4xx_it.o(i.DMA2_Stream3_IRQHandler))
 <BR><BR>[Stack]<UL><LI>Max Depth = 24<LI>Call Chain = DMA2_Stream3_IRQHandler &rArr; HAL_DMA_IRQHandler
 </UL>
@@ -579,6 +583,7 @@ Global Symbols
 <BR><BR>[Stack]<UL><LI>Max Depth = 24<LI>Call Chain = HAL_DMA_IRQHandler
 </UL>
 <BR>[Called By]<UL><LI><a href="#[57]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;DMA2_Stream3_IRQHandler
+<LI><a href="#[56]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;DMA2_Stream2_IRQHandler
 <LI><a href="#[54]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;DMA2_Stream0_IRQHandler
 </UL>
 
@@ -1009,7 +1014,7 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[e9]"></a>HAL_SPI_Init</STRONG> (Thumb, 140 bytes, Stack size 16 bytes, stm32f4xx_hal_spi.o(i.HAL_SPI_Init))
-<BR><BR>[Stack]<UL><LI>Max Depth = 104<LI>Call Chain = HAL_SPI_Init &rArr; HAL_SPI_MspInit &rArr; HAL_GPIO_Init
+<BR><BR>[Stack]<UL><LI>Max Depth = 120<LI>Call Chain = HAL_SPI_Init &rArr; HAL_SPI_MspInit &rArr; HAL_GPIO_Init
 </UL>
 <BR>[Calls]<UL><LI><a href="#[ea]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_SPI_MspInit
 </UL>
@@ -1018,8 +1023,8 @@ Global Symbols
 <LI><a href="#[11b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MX_SPI1_Init
 </UL>
 
-<P><STRONG><a name="[ea]"></a>HAL_SPI_MspInit</STRONG> (Thumb, 230 bytes, Stack size 48 bytes, spi.o(i.HAL_SPI_MspInit))
-<BR><BR>[Stack]<UL><LI>Max Depth = 88<LI>Call Chain = HAL_SPI_MspInit &rArr; HAL_GPIO_Init
+<P><STRONG><a name="[ea]"></a>HAL_SPI_MspInit</STRONG> (Thumb, 268 bytes, Stack size 64 bytes, spi.o(i.HAL_SPI_MspInit))
+<BR><BR>[Stack]<UL><LI>Max Depth = 104<LI>Call Chain = HAL_SPI_MspInit &rArr; HAL_GPIO_Init
 </UL>
 <BR>[Calls]<UL><LI><a href="#[8e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_GPIO_Init
 <LI><a href="#[8f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_DMA_Init
@@ -1044,7 +1049,7 @@ Global Symbols
 <LI><a href="#[104]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;sendDummyCMDtoRead
 </UL>
 
-<P><STRONG><a name="[ec]"></a>HAL_SPI_TxRxCpltCallback</STRONG> (Thumb, 40 bytes, Stack size 8 bytes, motor.o(i.HAL_SPI_TxRxCpltCallback))
+<P><STRONG><a name="[ec]"></a>HAL_SPI_TxRxCpltCallback</STRONG> (Thumb, 62 bytes, Stack size 8 bytes, motor.o(i.HAL_SPI_TxRxCpltCallback))
 <BR><BR>[Stack]<UL><LI>Max Depth = 48<LI>Call Chain = HAL_SPI_TxRxCpltCallback &rArr; xQueueGiveFromISR &rArr; xTaskRemoveFromEventList
 </UL>
 <BR>[Calls]<UL><LI><a href="#[8a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xQueueGiveFromISR
@@ -1189,7 +1194,7 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> startup_stm32f407xx.o(RESET)
 </UL>
-<P><STRONG><a name="[7e]"></a>MTR_MotorComm</STRONG> (Thumb, 344 bytes, Stack size 0 bytes, motor.o(i.MTR_MotorComm))
+<P><STRONG><a name="[7e]"></a>MTR_MotorComm</STRONG> (Thumb, 352 bytes, Stack size 0 bytes, motor.o(i.MTR_MotorComm))
 <BR><BR>[Stack]<UL><LI>Max Depth = 136<LI>Call Chain = MTR_MotorComm &rArr; sendDummyCMDtoRead &rArr; xQueueGenericReceive &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
 </UL>
 <BR>[Calls]<UL><LI><a href="#[102]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xQueueGenericReceive
@@ -1206,7 +1211,7 @@ Global Symbols
 <BR><BR>[Called By]<UL><LI><a href="#[7c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MTR_ctrlMotor
 </UL>
 
-<P><STRONG><a name="[7c]"></a>MTR_ctrlMotor</STRONG> (Thumb, 52 bytes, Stack size 0 bytes, motor.o(i.MTR_ctrlMotor))
+<P><STRONG><a name="[7c]"></a>MTR_ctrlMotor</STRONG> (Thumb, 56 bytes, Stack size 0 bytes, motor.o(i.MTR_ctrlMotor))
 <BR><BR>[Stack]<UL><LI>Max Depth = 112<LI>Call Chain = MTR_ctrlMotor &rArr; xQueueGenericReceive &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
 </UL>
 <BR>[Calls]<UL><LI><a href="#[102]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xQueueGenericReceive
@@ -1214,7 +1219,7 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> freertos.o(.constdata)
 </UL>
-<P><STRONG><a name="[105]"></a>MTR_parseReadData</STRONG> (Thumb, 38 bytes, Stack size 16 bytes, motor.o(i.MTR_parseReadData))
+<P><STRONG><a name="[105]"></a>MTR_parseReadData</STRONG> (Thumb, 42 bytes, Stack size 16 bytes, motor.o(i.MTR_parseReadData))
 <BR><BR>[Stack]<UL><LI>Max Depth = 16<LI>Call Chain = MTR_parseReadData
 </UL>
 <BR>[Calls]<UL><LI><a href="#[108]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_SPI_GetError
@@ -1267,7 +1272,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[6d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[110]"></a>MX_DMA_Init</STRONG> (Thumb, 56 bytes, Stack size 8 bytes, dma.o(i.MX_DMA_Init))
+<P><STRONG><a name="[110]"></a>MX_DMA_Init</STRONG> (Thumb, 72 bytes, Stack size 8 bytes, dma.o(i.MX_DMA_Init))
 <BR><BR>[Stack]<UL><LI>Max Depth = 24<LI>Call Chain = MX_DMA_Init &rArr; HAL_NVIC_SetPriority
 </UL>
 <BR>[Calls]<UL><LI><a href="#[a1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_NVIC_SetPriority
@@ -1333,7 +1338,7 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[11b]"></a>MX_SPI1_Init</STRONG> (Thumb, 54 bytes, Stack size 0 bytes, spi.o(i.MX_SPI1_Init))
-<BR><BR>[Stack]<UL><LI>Max Depth = 104<LI>Call Chain = MX_SPI1_Init &rArr; HAL_SPI_Init &rArr; HAL_SPI_MspInit &rArr; HAL_GPIO_Init
+<BR><BR>[Stack]<UL><LI>Max Depth = 120<LI>Call Chain = MX_SPI1_Init &rArr; HAL_SPI_Init &rArr; HAL_SPI_MspInit &rArr; HAL_GPIO_Init
 </UL>
 <BR>[Calls]<UL><LI><a href="#[e9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_SPI_Init
 </UL>
@@ -1341,7 +1346,7 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[11c]"></a>MX_SPI2_Init</STRONG> (Thumb, 44 bytes, Stack size 0 bytes, spi.o(i.MX_SPI2_Init))
-<BR><BR>[Stack]<UL><LI>Max Depth = 104<LI>Call Chain = MX_SPI2_Init &rArr; HAL_SPI_Init &rArr; HAL_SPI_MspInit &rArr; HAL_GPIO_Init
+<BR><BR>[Stack]<UL><LI>Max Depth = 120<LI>Call Chain = MX_SPI2_Init &rArr; HAL_SPI_Init &rArr; HAL_SPI_MspInit &rArr; HAL_GPIO_Init
 </UL>
 <BR>[Calls]<UL><LI><a href="#[e9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_SPI_Init
 </UL>
@@ -1349,7 +1354,7 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[11d]"></a>MX_SPI3_Init</STRONG> (Thumb, 44 bytes, Stack size 0 bytes, spi.o(i.MX_SPI3_Init))
-<BR><BR>[Stack]<UL><LI>Max Depth = 104<LI>Call Chain = MX_SPI3_Init &rArr; HAL_SPI_Init &rArr; HAL_SPI_MspInit &rArr; HAL_GPIO_Init
+<BR><BR>[Stack]<UL><LI>Max Depth = 120<LI>Call Chain = MX_SPI3_Init &rArr; HAL_SPI_Init &rArr; HAL_SPI_MspInit &rArr; HAL_GPIO_Init
 </UL>
 <BR>[Calls]<UL><LI><a href="#[e9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_SPI_Init
 </UL>
@@ -2164,7 +2169,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[15f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskGenericCreate
 </UL>
 
-<P><STRONG><a name="[104]"></a>sendDummyCMDtoRead</STRONG> (Thumb, 120 bytes, Stack size 24 bytes, motor.o(i.sendDummyCMDtoRead))
+<P><STRONG><a name="[104]"></a>sendDummyCMDtoRead</STRONG> (Thumb, 128 bytes, Stack size 24 bytes, motor.o(i.sendDummyCMDtoRead))
 <BR><BR>[Stack]<UL><LI>Max Depth = 136<LI>Call Chain = sendDummyCMDtoRead &rArr; xQueueGenericReceive &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
 </UL>
 <BR>[Calls]<UL><LI><a href="#[102]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xQueueGenericReceive

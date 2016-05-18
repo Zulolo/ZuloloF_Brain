@@ -51,8 +51,10 @@
 			SPI1_MOTOR_SELECT_3_Pin, SPI1_MOTOR_SELECT_4_Pin,
 			SPI1_MOTOR_SELECT_5_Pin, SPI1_MOTOR_SELECT_6_Pin,
 			SPI1_MOTOR_SELECT_7_Pin, SPI1_MOTOR_SELECT_8_Pin};
+	uint8_t MTR_unMotorSelectedIndex = 0;
 	#define SELECT_MOTOR(unMotorIndex)		HAL_GPIO_WritePin(SPI1_MOTOR_SELECT_Port[(unMotorIndex)], \
-												SPI1_MOTOR_SELECT_Pin[(unMotorIndex)], GPIO_PIN_RESET)
+												SPI1_MOTOR_SELECT_Pin[(unMotorIndex)], GPIO_PIN_RESET); \
+												MTR_unMotorSelectedIndex = (unMotorIndex)
 	#define DESELECT_MOTOR(unMotorIndex)	HAL_GPIO_WritePin(SPI1_MOTOR_SELECT_Port[(unMotorIndex)], \
 												SPI1_MOTOR_SELECT_Pin[(unMotorIndex)], GPIO_PIN_SET)
 #else
