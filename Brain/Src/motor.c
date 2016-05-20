@@ -11,7 +11,6 @@
 #include "spi.h"
 #include "tim.h"
 #include "usart.h"
-#include "usb_device.h"
 #include "gpio.h"
 
 #define __USED_BY_MOTOR__
@@ -22,7 +21,7 @@
 extern osSemaphoreId MTR_tMotorSpeedChangedHandle;
 extern osSemaphoreId MTR_tMotorSPI_CommCpltHandle;
 extern osMessageQId MotorCommQueueHandle;
-
+uint32_t unTestCNT = 0;
 //void MTR_giveMotorSpeedADC_Sem(struct __DMA_HandleTypeDef * hdma)
 //{
 //  static portBASE_TYPE xHigherPriorityTaskWoken;
@@ -88,25 +87,25 @@ void MTR_unUpdateMotorStatus(uint8_t unMotorIndex)
 	static MOTOR_SPI_COMM_T tMotorComm;
 
 	tMotorComm.unMotorIndex = unMotorIndex;
-	tMotorComm.unPayLoad[0] = COMM_READ_MSR;
+	tMotorComm.unPayLoad[0] = COMM_READ_MSR | MTR_COMM_RW_CMD_MASK;
 	if (xQueueSendToBack(MotorCommQueueHandle, &tMotorComm, portMAX_DELAY) != pdTRUE)
 	{
 		M_handleErr(NOT_USED_FOR_NOW);
 	}
 
-	tMotorComm.unPayLoad[0] = COMM_READ_RPM;
+	tMotorComm.unPayLoad[0] = COMM_READ_RPM | MTR_COMM_RW_CMD_MASK;
 	if (xQueueSendToBack(MotorCommQueueHandle, &tMotorComm, portMAX_DELAY) != pdTRUE)
 	{
 		M_handleErr(NOT_USED_FOR_NOW);
 	}
 
-	tMotorComm.unPayLoad[0] = COMM_READ_BATTERY;
+	tMotorComm.unPayLoad[0] = COMM_READ_BATTERY | MTR_COMM_RW_CMD_MASK;
 	if (xQueueSendToBack(MotorCommQueueHandle, &tMotorComm, portMAX_DELAY) != pdTRUE)
 	{
 		M_handleErr(NOT_USED_FOR_NOW);
 	}
 
-	tMotorComm.unPayLoad[0] = COMM_READ_CURRENT;
+	tMotorComm.unPayLoad[0] = COMM_READ_CURRENT | MTR_COMM_RW_CMD_MASK;
 	if (xQueueSendToBack(MotorCommQueueHandle, &tMotorComm, portMAX_DELAY) != pdTRUE)
 	{
 		M_handleErr(NOT_USED_FOR_NOW);
@@ -124,7 +123,7 @@ void MTR_parseReadData(MOTOR_SPI_COMM_T* pMotorComm, uint16_t* pMotorCommRxBuffe
 
 void sendDummyCMDtoRead(MOTOR_SPI_COMM_T* pMotorCommLast, uint16_t* pMotorCommRxBuffer)
 {
-	SELECT_MOTOR(pMotorCommLast->unMotorIndex);
+	SELECT_MOTOR(pMotorCommLast->unMotorIndex)
 	if(HAL_SPI_TransmitReceive_DMA(&hspi1, (uint8_t*)(T_MOTOR_DUMMY_CMD.unPayLoad), (uint8_t *)pMotorCommRxBuffer,
 			MTR_COMM_RD_CMD_CNT - 1) != HAL_OK)
 	{
@@ -141,18 +140,20 @@ void sendDummyCMDtoRead(MOTOR_SPI_COMM_T* pMotorCommLast, uint16_t* pMotorCommRx
 			MTR_parseReadData(pMotorCommLast, pMotorCommRxBuffer);
 		}
 	}
-	DESELECT_MOTOR(pMotorCommLast->unMotorIndex);
+	DESELECT_MOTOR(pMotorCommLast->unMotorIndex)
 	*pMotorCommLast = T_MOTOR_DUMMY_CMD;
 }
+
+
 
 // If there is no other command need to send or the next command is send to another motor
 // and the last command is a read command, send one dummy command to this motor to retrieve read value
 void MTR_MotorComm(void const * argument)
 {
-	static MOTOR_SPI_COMM_T tMotorComm = MTR_DUMMY_CMD_CONTENT;
-	static MOTOR_SPI_COMM_T tMotorCommLast = MTR_DUMMY_CMD_CONTENT;
+	MOTOR_SPI_COMM_T tMotorComm = MTR_DUMMY_CMD_CONTENT;
+	MOTOR_SPI_COMM_T tMotorCommLast = MTR_DUMMY_CMD_CONTENT;
 	static uint16_t unMotorCommRxBuffer[MAX_MOTOR_COMM_LENGTH + 1];
-
+	
 	DESELECT_ALL_MOTOR;
 	for(;;)
 	{
@@ -160,6 +161,12 @@ void MTR_MotorComm(void const * argument)
 		{
 			M_handleErr(NOT_USED_FOR_NOW);
 		}
+
+		if (tMotorComm.unMotorIndex >= MOTOR_NUMBER)
+		{
+			continue;
+		}
+
 		/*********************************************************/
 		/* ----======== Pre send command stage start ========----*/
 		// If this command belongs to a different motor and last time command is one read command
@@ -174,7 +181,7 @@ void MTR_MotorComm(void const * argument)
 
 		/*********************************************************/
 		/* ----======== Send command stage start ========----*/
-		SELECT_MOTOR(tMotorComm.unMotorIndex);
+		SELECT_MOTOR(tMotorComm.unMotorIndex)
 		if(HAL_SPI_TransmitReceive_DMA(&hspi1, (uint8_t*)(tMotorComm.unPayLoad), (uint8_t *)unMotorCommRxBuffer,
 				(IS_MTR_COMM_RD_CMD(tMotorComm.unPayLoad[0]) ? (MTR_COMM_RD_CMD_CNT - 1) : (MTR_COMM_WR_CMD_CNT - 1))) != HAL_OK)
 		{
@@ -194,7 +201,7 @@ void MTR_MotorComm(void const * argument)
 				MTR_parseReadData(&tMotorCommLast, unMotorCommRxBuffer);
 			}
 		}
-		DESELECT_MOTOR(tMotorComm.unMotorIndex);
+		DESELECT_MOTOR(tMotorComm.unMotorIndex)
 
 		/* ----======== Send command stage end ========----*/
 		/*********************************************************/

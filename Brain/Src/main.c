@@ -43,7 +43,7 @@
 #include "spi.h"
 #include "tim.h"
 #include "usart.h"
-#include "usb_device.h"
+#include "usb_otg.h"
 #include "gpio.h"
 
 /* USER CODE BEGIN Includes */
@@ -132,6 +132,7 @@ int main(void)
   MX_USART3_UART_Init();
   MX_TIM2_Init();
   MX_TIM6_Init();
+  MX_USB_OTG_FS_PCD_Init();
 
   /* USER CODE BEGIN 2 */
   tErrorStatus = SUCCESS;

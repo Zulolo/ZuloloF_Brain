@@ -41,12 +41,12 @@ extern osSemaphoreId RTN_tNeedToUpdateMotorHandle;
 /* USER CODE END 0 */
 
 /* External variables --------------------------------------------------------*/
-extern PCD_HandleTypeDef hpcd_USB_OTG_FS;
 extern DMA_HandleTypeDef hdma_adc3;
 extern DMA_HandleTypeDef hdma_spi1_tx;
 extern DMA_HandleTypeDef hdma_spi1_rx;
 extern TIM_HandleTypeDef htim6;
 extern TIM_HandleTypeDef htim13;
+extern PCD_HandleTypeDef hpcd_USB_OTG_FS;
 
 extern TIM_HandleTypeDef htim1;
 

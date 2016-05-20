@@ -75,11 +75,6 @@ brain\routine.o: ../Inc/sdio.h
 brain\routine.o: ../Inc/spi.h
 brain\routine.o: ../Inc/tim.h
 brain\routine.o: ../Inc/usart.h
-brain\routine.o: ../Inc/usb_device.h
-brain\routine.o: ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_def.h
-brain\routine.o: ../Inc/usbd_conf.h
-brain\routine.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
-brain\routine.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
 brain\routine.o: ../Inc/gpio.h
 brain\routine.o: ../Inc/global.h
 brain\routine.o: ../Inc/routine.h

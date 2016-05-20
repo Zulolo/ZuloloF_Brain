@@ -75,11 +75,7 @@ brain\main.o: ../Inc/sdio.h
 brain\main.o: ../Inc/spi.h
 brain\main.o: ../Inc/tim.h
 brain\main.o: ../Inc/usart.h
-brain\main.o: ../Inc/usb_device.h
-brain\main.o: ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_def.h
-brain\main.o: ../Inc/usbd_conf.h
-brain\main.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
-brain\main.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
+brain\main.o: ../Inc/usb_otg.h
 brain\main.o: ../Inc/gpio.h
 brain\main.o: ../Inc/global.h
 brain\main.o: ../Inc/motor.h

@@ -11,7 +11,6 @@
 #include "spi.h"
 #include "tim.h"
 #include "usart.h"
-#include "usb_device.h"
 #include "gpio.h"
 
 #define __USED_BY_ROUTINE__
@@ -22,7 +21,6 @@
 
 extern osSemaphoreId RTN_tNeedToUpdateMotorHandle;
 
-
 void RTN_updateMotor(void const * argument)
 {
 	uint8_t unMotorIndex;
@@ -32,6 +30,7 @@ void RTN_updateMotor(void const * argument)
 	for(;;)
 	{
 		xSemaphoreTake(RTN_tNeedToUpdateMotorHandle, portMAX_DELAY);
+//		HAL_GPIO_TogglePin(SPI1_MOTOR_SELECT_1_GPIO_Port, SPI1_MOTOR_SELECT_1_Pin);
 		for (unMotorIndex = 0; unMotorIndex < MOTOR_NUMBER; unMotorIndex++)
 		{
 			MTR_unUpdateMotorStatus(unMotorIndex);
