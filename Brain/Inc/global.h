@@ -5,7 +5,9 @@
 #include "stm32f4xx.h"
 
 #define GPIO_DEMO_LED_PORT 				GPIOB
-#define ADC_MOTOR_SPEED				  	ADC3
+#define MOTOR_SPEED_ADC				  	ADC3
+#define MOTOR_SPEED_ADC_HANDLER		  	hadc3
+#define MOTOR_COMM_SPI_HANDLER		  	hspi1
 #define ADC_12BIT_MASK				  	0x0FFF
 #define MOTOR_NUMBER					4
 
@@ -39,7 +41,8 @@ typedef struct
 	__IO uint16_t  unBattery;			/*!<  Battery Voltage  */
 	__IO uint16_t  unCurrent;			/*!<  Current  */
 	__IO uint16_t  unRESERVE_2;			//*!<  for 4 bytes align */
-	__IO uint32_t  unCommCNT;			//*!<  Received communication frame of this motor (including CRC error) */
+	__IO uint32_t  unCommOK_CNT;			//*!<  Received communication frame OK number of this motor */
+	__IO uint32_t  unCommErrCNT;			//*!<  Received communication frame error number of this motor */
 } MOTOR_T;
 
 typedef union

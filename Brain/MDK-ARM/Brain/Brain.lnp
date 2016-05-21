@@ -37,6 +37,7 @@
 "brain\ahrs.o"
 "brain\routine.o"
 "brain\usb_otg.o"
+"brain\rng.o"
 "brain\stm32f4xx_hal_i2c_ex.o"
 "brain\stm32f4xx_ll_usb.o"
 "brain\stm32f4xx_hal_adc_ex.o"
@@ -64,6 +65,7 @@
 "brain\stm32f4xx_hal_flash.o"
 "brain\stm32f4xx_hal_i2c.o"
 "brain\stm32f4xx_hal_cortex.o"
+"brain\stm32f4xx_hal_rng.o"
 --library_type=microlib --strict --scatter "Brain\Brain.sct"
 --diag_suppress=L6329 --summary_stderr --info summarysizes --map --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers

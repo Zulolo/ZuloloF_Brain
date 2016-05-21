@@ -33,6 +33,7 @@ brain\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h
 brain\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_iwdg.h
 brain\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h
 brain\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h
+brain\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h
 brain\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h
 brain\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h
 brain\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h
@@ -71,6 +72,7 @@ brain\main.o: ../Middlewares/Third_Party/FatFs/src/diskio.h
 brain\main.o: ../Inc/user_diskio.h
 brain\main.o: ../Inc/i2c.h
 brain\main.o: ../Inc/iwdg.h
+brain\main.o: ../Inc/rng.h
 brain\main.o: ../Inc/sdio.h
 brain\main.o: ../Inc/spi.h
 brain\main.o: ../Inc/tim.h

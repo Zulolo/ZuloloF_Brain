@@ -39,6 +39,7 @@
 #include "fatfs.h"
 #include "i2c.h"
 #include "iwdg.h"
+#include "rng.h"
 #include "sdio.h"
 #include "spi.h"
 #include "tim.h"
@@ -75,14 +76,14 @@ void blinkDemoLED(void const * argument)
 {
   for(;;)
   {
-//    if (ERROR == tErrorStatus)
-//    {
-//      HAL_GPIO_WritePin(GPIO_DEMO_LED_PORT, DEMO_LED_Pin, GPIO_PIN_RESET);
-//    }
-//    else
-//    {
-//      HAL_GPIO_TogglePin(GPIO_DEMO_LED_PORT, DEMO_LED_Pin);
-//    }
+    if (ERROR == tErrorStatus)
+    {
+      HAL_GPIO_WritePin(GPIO_DEMO_LED_PORT, DEMO_LED_Pin, GPIO_PIN_RESET);
+    }
+    else
+    {
+      HAL_GPIO_TogglePin(GPIO_DEMO_LED_PORT, DEMO_LED_Pin);
+    }
     osDelay(1000);
   }
 }
@@ -133,6 +134,7 @@ int main(void)
   MX_TIM2_Init();
   MX_TIM6_Init();
   MX_USB_OTG_FS_PCD_Init();
+  MX_RNG_Init();
 
   /* USER CODE BEGIN 2 */
   tErrorStatus = SUCCESS;
