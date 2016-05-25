@@ -140,7 +140,7 @@ void MTR_unUpdateMotorStatus(uint8_t unMotorIndex)
 	static MOTOR_SPI_COMM_T tMotorComm;
 
 	tMotorComm.unMotorIndex = unMotorIndex;
-	tMotorComm.unPayLoad[0] = COMM_READ_MSR | MTR_COMM_RW_CMD_MASK;
+	tMotorComm.unPayLoad[0] = 1 | MTR_COMM_RW_CMD_MASK;	//COMM_READ_MSR | MTR_COMM_RW_CMD_MASK;
 	if (xQueueSendToBack(MotorCommQueueHandle, &tMotorComm, portMAX_DELAY) != pdTRUE)
 	{
 		M_handleErr(NOT_USED_FOR_NOW);

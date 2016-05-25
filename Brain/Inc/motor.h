@@ -7,8 +7,8 @@
 	#define MTR_INVALID_MOTOR_CMD		0xFFFF
 	#define MTR_INVALID_MOTOR_INDEX		0xFFFF
 	#define MTR_DUMMY_CMD_CONTENT		{.unMotorIndex = MTR_INVALID_MOTOR_INDEX, .unPayLoad[0] = MTR_INVALID_MOTOR_CMD}
-	#define MTR_COMM_RD_CMD_CNT			2	// R(0):Address | CRC
-	#define MTR_COMM_WR_CMD_CNT			4	// W(1):Address | Data Low | Data High | CRC
+	#define MTR_COMM_RD_CMD_CNT			2	// R(1):Address | CRC
+	#define MTR_COMM_WR_CMD_CNT			4	// W(0):Address | Data Low | Data High | CRC
 	#define MTR_COMM_RW_CMD_MASK		(0x8000)
 	#define IS_MTR_COMM_RD_CMD(value)	((((value) & MTR_COMM_RW_CMD_MASK) == MTR_COMM_RW_CMD_MASK) && ((value) != MTR_INVALID_MOTOR_CMD))
 	#define IS_MTR_COMM_WR_CMD(value)	((((value) & MTR_COMM_RW_CMD_MASK) == 0) && ((value) != MTR_INVALID_MOTOR_CMD))
