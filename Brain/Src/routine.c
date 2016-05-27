@@ -24,13 +24,13 @@ extern osSemaphoreId RTN_tNeedToUpdateMotorHandle;
 void RTN_updateMotor(void const * argument)
 {
 	uint8_t unMotorIndex;
+	
 	HAL_ADC_Start_DMA(&MOTOR_SPEED_ADC_HANDLER, (uint32_t *)&unMotorSpeedADC_Buf, MOTOR_SPEED_ADC_DMA_DEPTH);
 	HAL_TIM_Base_Start(&htim2);
 	HAL_TIM_Base_Start_IT(&htim6);
 	for(;;)
 	{
 		xSemaphoreTake(RTN_tNeedToUpdateMotorHandle, portMAX_DELAY);
-//		HAL_GPIO_TogglePin(SPI1_MOTOR_SELECT_1_GPIO_Port, SPI1_MOTOR_SELECT_1_Pin);
 		for (unMotorIndex = 0; unMotorIndex < MOTOR_NUMBER; unMotorIndex++)
 		{
 			MTR_unUpdateMotorStatus(unMotorIndex);

@@ -72,7 +72,7 @@
 __EXTERN_MOTOR__ uint16_t MTR_calculateMotorSpeedADC(void);
 __EXTERN_MOTOR__ void MTR_ctrlMotor(void const * argument);
 __EXTERN_MOTOR__ void MTR_unUpdateMotorStatus(uint8_t unMotorIndex);
-__EXTERN_MOTOR__ __IO MOTOR_UNION_T MTR_tMotor[MOTOR_NUMBER];
+__EXTERN_MOTOR__ MOTOR_UNION_T MTR_tMotor[MOTOR_NUMBER];
 #endif
 
 

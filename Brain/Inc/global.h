@@ -6,10 +6,10 @@
 
 #define GPIO_DEMO_LED_PORT 				GPIOB
 #define MOTOR_SPEED_ADC				  	ADC3
-#define MOTOR_SPEED_ADC_HANDLER		  	hadc3
-#define MOTOR_COMM_SPI_HANDLER		  	hspi1
+#define MOTOR_SPEED_ADC_HANDLER		hadc3
+#define MOTOR_COMM_SPI_HANDLER		hspi1
 #define ADC_12BIT_MASK				  	0x0FFF
-#define MOTOR_NUMBER					4
+#define MOTOR_NUMBER							4
 
 typedef struct
 {

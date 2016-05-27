@@ -209,6 +209,11 @@
           <WinNumber>1</WinNumber>
           <ItemText>unTestCNT</ItemText>
         </Ww>
+        <Ww>
+          <count>1</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>MTR_tMotor</ItemText>
+        </Ww>
       </WatchWindow1>
       <MemoryWindow1>
         <Mm>
