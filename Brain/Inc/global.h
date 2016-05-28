@@ -33,7 +33,7 @@ typedef struct
 	__IO uint16_t  unTargetDuty;		/*!<  PWM Target (Locked State) Duty  */
 	__IO uint16_t  unActualDuty;		/*!<  PWM Actual Duty  */
 	__IO uint16_t  unLocatingPeriod;	/*!<  Locating State One Phase Period  */
-	__IO uint16_t  unSpeedADC;			/*!<  for 4 bytes align */
+	__IO uint16_t  unSpeedADC;			/*!<  ADC read data, used to determine Target Duty */
 	__IO uint32_t  unRampUpPeriod;		/*!<  Ramp Up Start One Phase Period  */
 	__IO uint32_t  unActualPeriod;		/*!<  Actual One Phase Period  */
 	__IO uint32_t  unPhaseChangeCNT;	/*!<  Phase changed counter  */
@@ -41,8 +41,8 @@ typedef struct
 	__IO uint16_t  unBattery;			/*!<  Battery Voltage  */
 	__IO uint16_t  unCurrent;			/*!<  Current  */
 	__IO uint16_t  unRESERVE_2;			//*!<  for 4 bytes align */
-	__IO uint32_t  unCommOK_CNT;			//*!<  Received communication frame OK number of this motor */
-	__IO uint32_t  unCommErrCNT;			//*!<  Received communication frame error number of this motor */
+	__IO uint32_t  unCommOK_CNT;			//*!<  Communication OK number */
+	__IO uint32_t  unCommErrCNT;			//*!<  Communication error number */
 } MOTOR_T;
 
 typedef union

@@ -23,7 +23,7 @@ extern osSemaphoreId RTN_tNeedToUpdateMotorHandle;
 
 void RTN_updateMotor(void const * argument)
 {
-	uint8_t unMotorIndex;
+//	uint8_t unMotorIndex;
 	
 	HAL_ADC_Start_DMA(&MOTOR_SPEED_ADC_HANDLER, (uint32_t *)&unMotorSpeedADC_Buf, MOTOR_SPEED_ADC_DMA_DEPTH);
 	HAL_TIM_Base_Start(&htim2);
@@ -31,9 +31,10 @@ void RTN_updateMotor(void const * argument)
 	for(;;)
 	{
 		xSemaphoreTake(RTN_tNeedToUpdateMotorHandle, portMAX_DELAY);
-		for (unMotorIndex = 0; unMotorIndex < MOTOR_NUMBER; unMotorIndex++)
-		{
-			MTR_unUpdateMotorStatus(unMotorIndex);
-		}
+//		for (unMotorIndex = 0; unMotorIndex < MOTOR_NUMBER; unMotorIndex++)
+//		{
+			MTR_unReadMotorStatus(MOTOR_NUMBER);
+			MTR_unUpdateMotorStatus(MOTOR_NUMBER);
+//		}
 	}
 }
