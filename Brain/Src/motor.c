@@ -205,7 +205,7 @@ void MTR_unReadMotorStatus(uint8_t unMaxMotorNum)
 //			M_handleErr(NOT_USED_FOR_NOW);
 //		}
 //	}
-	
+//	
 //	for (unMotorIndex = 0; unMotorIndex < unMaxMotorNum; unMotorIndex++)
 //	{
 //		tMotorComm.unMotorIndex = unMotorIndex;
@@ -235,6 +235,7 @@ void MTR_unUpdateMotorStatus(uint8_t unMaxMotorNum)
 	}
 }
 
+uint16_t unErrorSPI_Data[2];
 void MTR_analyzeReadData(MOTOR_SPI_COMM_T* pMotorComm, uint16_t* pMotorCommRxBuffer)
 {
 	uint8_t unReadItem;
@@ -247,6 +248,10 @@ void MTR_analyzeReadData(MOTOR_SPI_COMM_T* pMotorComm, uint16_t* pMotorCommRxBuf
 		{
 			MTR_tMotor[pMotorComm->unMotorIndex].unValue[unReadItem] = pMotorCommRxBuffer[0];
 		}
+	}
+	else
+	{
+		unErrorSPI_Data[0] = pMotorCommRxBuffer[0];
 	}
 }
 
