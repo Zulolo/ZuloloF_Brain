@@ -2,20 +2,25 @@
 #ifndef __MOTOR_H
 #define __MOTOR_H
 
+
+#define MTR_SPD_CHNG_SEM_MAX		10
+#define MAX_MOTOR_COMM_LENGTH		3
+
 #ifdef __USED_BY_MOTOR__
 	#define __EXTERN_MOTOR__
 	#define MTR_INVALID_MOTOR_CMD		0xFFFF
-	#define MTR_INVALID_MOTOR_INDEX		0xFFFF
+	#define MTR_INVALID_MOTOR_INDEX	0xFFFF
 	#define MTR_DUMMY_CMD_CONTENT		{.unMotorIndex = MTR_INVALID_MOTOR_INDEX, .unPayLoad[0] = MTR_INVALID_MOTOR_CMD}
 	#define MTR_COMM_RD_CMD_CNT			2	// R(1):Address | CRC
 	#define MTR_COMM_WR_CMD_CNT			4	// W(0):Address | Data Low | Data High | CRC
 	#define MTR_COMM_RW_CMD_MASK		(0x8000)
-	#define PWM_PERIOD 					(884-1)
+	#define PWM_PERIOD 							(884-1)
 	#define MIN_MOTOR_PWR_DUTY 			(100)
 	#define MAX_MOTOR_PWR_DUTY 			(PWM_PERIOD - 150)
-	#define MTR_SPEED_ADC_MIN			MIN_MOTOR_PWR_DUTY
-	#define MTR_SPEED_ADC_MAX			MAX_MOTOR_PWR_DUTY
+	#define MTR_SPEED_ADC_MIN				MIN_MOTOR_PWR_DUTY
+	#define MTR_SPEED_ADC_MAX				MAX_MOTOR_PWR_DUTY
 	#define MTR_COMM_INTVL_MIN			10	//10ms
+	#define MTR_GET_RD_ITEM(RdCmd)	((RdCmd) & (~MTR_COMM_RW_CMD_MASK))
 	#define IS_MTR_COMM_RD_CMD(value)	((((value) & MTR_COMM_RW_CMD_MASK) == MTR_COMM_RW_CMD_MASK) && ((value) != MTR_INVALID_MOTOR_CMD))
 	#define IS_MTR_COMM_WR_CMD(value)	((((value) & MTR_COMM_RW_CMD_MASK) == 0) && ((value) != MTR_INVALID_MOTOR_CMD))
 	#define DESELECT_ALL_MOTOR			HAL_GPIO_WritePin(SPI1_MOTOR_SELECT_1_GPIO_Port, SPI1_MOTOR_SELECT_1_Pin, GPIO_PIN_SET); \
@@ -72,20 +77,9 @@
 			SPI1_MOTOR_SELECT_7_Pin, SPI1_MOTOR_SELECT_8_Pin};
 	__IO uint8_t MTR_unMotorSelectedIndex = 0;
 
-	#define SELECT_MOTOR(unMotorIndex)		if ((unMotorIndex) < MOTOR_NUMBER) {\
-												HAL_GPIO_WritePin(SPI1_MOTOR_SELECT_Port[(unMotorIndex)], \
-												SPI1_MOTOR_SELECT_Pin[(unMotorIndex)], GPIO_PIN_RESET); \
-												MTR_unMotorSelectedIndex = (unMotorIndex);}
-	#define DESELECT_MOTOR(unMotorIndex)	if ((unMotorIndex) < MOTOR_NUMBER) {\
-												HAL_GPIO_WritePin(SPI1_MOTOR_SELECT_Port[(unMotorIndex)], \
-												SPI1_MOTOR_SELECT_Pin[(unMotorIndex)], GPIO_PIN_SET);}
-	TickType_t	unLastCommTime[MOTOR_NUMBER];
 #else
 	#define __EXTERN_MOTOR__ extern
 #endif
-
-#define MTR_SPD_CHNG_SEM_MAX		10
-#define MAX_MOTOR_COMM_LENGTH		3
 
 //__EXTERN_MOTOR__ QueueHandle_t MTR_tMotorSpeedChangedSemaphore;
 //__EXTERN_MOTOR__ void MTR_giveMotorSpeedADC_Sem(struct __DMA_HandleTypeDef * hdma);
