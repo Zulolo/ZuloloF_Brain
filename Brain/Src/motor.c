@@ -189,7 +189,7 @@ void MTR_unReadMotorStatus(uint8_t unMaxMotorNum)
 	for (unMotorIndex = 0; unMotorIndex < unMaxMotorNum; unMotorIndex++)
 	{
 		tMotorComm.unMotorIndex = unMotorIndex;
-		tMotorComm.unPayLoad[0] = COMM_READ_RPM | MTR_COMM_RW_CMD_MASK;
+		tMotorComm.unPayLoad[0] = COMM_READ_LOCATING_PERIOD | MTR_COMM_RW_CMD_MASK;
 		if (xQueueSendToBack(MotorCommQueueHandle, &tMotorComm, portMAX_DELAY) != pdTRUE)
 		{
 			M_handleErr(NOT_USED_FOR_NOW);
