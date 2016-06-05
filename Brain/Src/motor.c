@@ -32,7 +32,7 @@ extern osMessageQId MotorCommQueueHandle;
 //	  portEND_SWITCHING_ISR(xHigherPriorityTaskWoken);
 //  }
 //}
-
+	
 void selectMotor(uint8_t unMotorIndex)
 {
 	if (unMotorIndex < MOTOR_NUMBER) 
@@ -234,13 +234,15 @@ void MTR_unUpdateMotorStatus(uint8_t unMaxMotorNum)
 		}	
 	}
 }
-
+	uint32_t unErrorCode;
 uint16_t unErrorSPI_Data[2];
 void MTR_analyzeReadData(MOTOR_SPI_COMM_T* pMotorComm, uint16_t* pMotorCommRxBuffer)
 {
 	uint8_t unReadItem;
+
 	// CRC check
-	if (HAL_SPI_GetError(&MOTOR_COMM_SPI_HANDLER) == HAL_SPI_ERROR_NONE)
+	unErrorCode = HAL_SPI_GetError(&MOTOR_COMM_SPI_HANDLER);
+	if (unErrorCode == HAL_SPI_ERROR_NONE)
 	{
 		unReadItem = MTR_GET_RD_ITEM(pMotorComm->unPayLoad[0]);
 		// Validation check
@@ -252,6 +254,7 @@ void MTR_analyzeReadData(MOTOR_SPI_COMM_T* pMotorComm, uint16_t* pMotorCommRxBuf
 	else
 	{
 		unErrorSPI_Data[0] = pMotorCommRxBuffer[0];
+		unErrorSPI_Data[1] = pMotorCommRxBuffer[1];
 	}
 }
 
@@ -312,6 +315,7 @@ int32_t retrieveAllReadData(MOTOR_SPI_COMM_T* pMotorCommLast, TickType_t* pLastC
 // If some read commands were sent out and there is more read command in the queue,
 // dummy command will be sent out to the motors which have been sent to with read command.
 // By this way we can optimize that only one dummy command will be sent out to each motor before write (analyze) it.
+
 void MTR_MotorComm(void const * argument)
 {
 	MOTOR_SPI_COMM_T tMotorComm = MTR_DUMMY_CMD_CONTENT;
