@@ -33,7 +33,7 @@ void RTN_updateMotor(void const * argument)
 		xSemaphoreTake(RTN_tNeedToUpdateMotorHandle, portMAX_DELAY);
 //		for (unMotorIndex = 0; unMotorIndex < MOTOR_NUMBER; unMotorIndex++)
 //		{
-			MTR_unReadMotorStatus(MOTOR_NUMBER);
+//			MTR_unReadMotorStatus(MOTOR_NUMBER);
 //			MTR_unUpdateMotorStatus(MOTOR_NUMBER);
 //		}
 	}
