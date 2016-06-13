@@ -270,30 +270,22 @@ void MTR_analyzeReadData(MOTOR_SPI_COMM_T* pMotorComm, uint16_t* pMotorCommRxBuf
 {
 	uint8_t unReadItem;
 	uint16_t unCRC;
-	static uint16_t unLastValue;
 	
 	// CRC check
 //	unCRC = calCRC16((uint8_t *)pMotorCommRxBuffer, 2);
 	
-	if (unLastValue == pMotorCommRxBuffer[0])
+	unReadItem = MTR_GET_RD_ITEM(pMotorComm->unPayLoad[0]);
+	// Validation check
+	if (unReadItem < COMM_READ_MAX)
 	{
-		unReadItem = MTR_GET_RD_ITEM(pMotorComm->unPayLoad[0]);
-		// Validation check
-		if (unReadItem < COMM_READ_MAX)
-		{
-			MTR_tMotor[pMotorComm->unMotorIndex].unValue[unReadItem] = pMotorCommRxBuffer[0];
-			MTR_tMotor[pMotorComm->unMotorIndex].structMotor.unCommOK_CNT++;
-		}
-		else
-		{
-			MTR_tMotor[pMotorComm->unMotorIndex].structMotor.unCommErrCNT++;
-		}
+		MTR_tMotor[pMotorComm->unMotorIndex].unValue[unReadItem] = pMotorCommRxBuffer[0];
+		MTR_tMotor[pMotorComm->unMotorIndex].structMotor.unCommOK_CNT++;
 	}
 	else
 	{
-		unLastValue = pMotorCommRxBuffer[0];
 		MTR_tMotor[pMotorComm->unMotorIndex].structMotor.unCommErrCNT++;
 	}
+
 }
 
 // If some read commands were sent out and there is more read command in the queue,
