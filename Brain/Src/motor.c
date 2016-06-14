@@ -171,100 +171,52 @@ void MTR_ctrlMotor(void const * argument)
 	}
 }
 
-//void MTR_unReadMotorStatus(uint8_t unMotorIndex)
-//{
-//	static MOTOR_SPI_COMM_T tMotorComm;
-
-//	tMotorComm.unMotorIndex = unMotorIndex;
-//	tMotorComm.unPayLoad[0] = COMM_READ_MSR | MTR_COMM_RW_CMD_MASK;
-//	if (xQueueSendToBack(MotorCommQueueHandle, &tMotorComm, portMAX_DELAY) != pdTRUE)
-//	{
-//		M_handleErr(NOT_USED_FOR_NOW);
-//	}
-
-//	tMotorComm.unPayLoad[0] = COMM_READ_RPM | MTR_COMM_RW_CMD_MASK;
-//	if (xQueueSendToBack(MotorCommQueueHandle, &tMotorComm, portMAX_DELAY) != pdTRUE)
-//	{
-//		M_handleErr(NOT_USED_FOR_NOW);
-//	}
-
-//	tMotorComm.unPayLoad[0] = COMM_READ_BATTERY | MTR_COMM_RW_CMD_MASK;
-//	if (xQueueSendToBack(MotorCommQueueHandle, &tMotorComm, portMAX_DELAY) != pdTRUE)
-//	{
-//		M_handleErr(NOT_USED_FOR_NOW);
-//	}
-
-//	tMotorComm.unPayLoad[0] = COMM_READ_CURRENT | MTR_COMM_RW_CMD_MASK;
-//	if (xQueueSendToBack(MotorCommQueueHandle, &tMotorComm, portMAX_DELAY) != pdTRUE)
-//	{
-//		M_handleErr(NOT_USED_FOR_NOW);
-//	}
-//}
-
 void MTR_unReadMotorStatus(uint8_t unMaxMotorNum)
 {
 	static MOTOR_SPI_COMM_T tMotorComm;
 	static uint8_t unMotorIndex;
 	
-//	for (unMotorIndex = 0; unMotorIndex < unMaxMotorNum; unMotorIndex++)
-//	{
-//		tMotorComm.unMotorIndex = unMotorIndex;
-//		tMotorComm.unPayLoad[0] = COMM_READ_MSR | MTR_COMM_RW_CMD_MASK;
-//		if (xQueueSendToBack(MotorCommQueueHandle, &tMotorComm, portMAX_DELAY) != pdTRUE)
-//		{
-//			M_handleErr(NOT_USED_FOR_NOW);
-//		}	
-//	}
+	for (unMotorIndex = 0; unMotorIndex < unMaxMotorNum; unMotorIndex++)
+	{
+		tMotorComm.unMotorIndex = unMotorIndex;
+		tMotorComm.unPayLoad[0] = COMM_READ_MSR | MTR_COMM_RW_CMD_MASK;
+		if (xQueueSendToBack(MotorCommQueueHandle, &tMotorComm, portMAX_DELAY) != pdTRUE)
+		{
+			M_handleErr(NOT_USED_FOR_NOW);
+		}	
+	}
 
-//	for (unMotorIndex = 0; unMotorIndex < unMaxMotorNum; unMotorIndex++)
-//	{
+	for (unMotorIndex = 0; unMotorIndex < unMaxMotorNum; unMotorIndex++)
+	{
 		tMotorComm.unMotorIndex = 0;	//unMotorIndex;
 		tMotorComm.unPayLoad[0] = COMM_READ_LOCATING_PERIOD | MTR_COMM_RW_CMD_MASK;
 		if (xQueueSendToBack(MotorCommQueueHandle, &tMotorComm, portMAX_DELAY) != pdTRUE)
 		{
 			M_handleErr(NOT_USED_FOR_NOW);
 		}
-//	}
+	}
 	
-//	for (unMotorIndex = 0; unMotorIndex < unMaxMotorNum; unMotorIndex++)
-//	{
-//		tMotorComm.unMotorIndex = unMotorIndex;
-//		tMotorComm.unPayLoad[0] = COMM_READ_BATTERY | MTR_COMM_RW_CMD_MASK;
-//		if (xQueueSendToBack(MotorCommQueueHandle, &tMotorComm, portMAX_DELAY) != pdTRUE)
-//		{
-//			M_handleErr(NOT_USED_FOR_NOW);
-//		}
-//	}
-//	
-//	for (unMotorIndex = 0; unMotorIndex < unMaxMotorNum; unMotorIndex++)
-//	{
-//		tMotorComm.unMotorIndex = unMotorIndex;
-//		tMotorComm.unPayLoad[0] = COMM_READ_CURRENT | MTR_COMM_RW_CMD_MASK;
-//		if (xQueueSendToBack(MotorCommQueueHandle, &tMotorComm, portMAX_DELAY) != pdTRUE)
-//		{
-//			M_handleErr(NOT_USED_FOR_NOW);
-//		}
-//	}
-}
-
-void MTR_unUpdateMotorStatus(uint8_t unMaxMotorNum)
-{
-	static MOTOR_SPI_COMM_T tMotorComm;
-	static uint8_t unMotorIndex;
-	
-	// Update speed
 	for (unMotorIndex = 0; unMotorIndex < unMaxMotorNum; unMotorIndex++)
 	{
 		tMotorComm.unMotorIndex = unMotorIndex;
-		tMotorComm.unPayLoad[0] = COMM_WRITE_TARGET_DUTY;
-		tMotorComm.unPayLoad[1] = MTR_tMotor[unMotorIndex].structMotor.unTargetDuty;
+		tMotorComm.unPayLoad[0] = COMM_READ_BATTERY | MTR_COMM_RW_CMD_MASK;
 		if (xQueueSendToBack(MotorCommQueueHandle, &tMotorComm, portMAX_DELAY) != pdTRUE)
 		{
 			M_handleErr(NOT_USED_FOR_NOW);
-		}	
+		}
+	}
+	
+	for (unMotorIndex = 0; unMotorIndex < unMaxMotorNum; unMotorIndex++)
+	{
+		tMotorComm.unMotorIndex = unMotorIndex;
+		tMotorComm.unPayLoad[0] = COMM_READ_CURRENT | MTR_COMM_RW_CMD_MASK;
+		if (xQueueSendToBack(MotorCommQueueHandle, &tMotorComm, portMAX_DELAY) != pdTRUE)
+		{
+			M_handleErr(NOT_USED_FOR_NOW);
+		}
 	}
 }
-//	
+
 
 void MTR_analyzeReadData(MOTOR_SPI_COMM_T* pMotorComm, uint16_t* pMotorCommRxBuffer)
 {
@@ -272,20 +224,25 @@ void MTR_analyzeReadData(MOTOR_SPI_COMM_T* pMotorComm, uint16_t* pMotorCommRxBuf
 	uint16_t unCRC;
 	
 	// CRC check
-//	unCRC = calCRC16((uint8_t *)pMotorCommRxBuffer, 2);
-	
-	unReadItem = MTR_GET_RD_ITEM(pMotorComm->unPayLoad[0]);
-	// Validation check
-	if (unReadItem < COMM_READ_MAX)
+	unCRC = calCRC16((uint8_t *)pMotorCommRxBuffer, 2);
+	if (unCRC == pMotorCommRxBuffer[1])
 	{
-		MTR_tMotor[pMotorComm->unMotorIndex].unValue[unReadItem] = pMotorCommRxBuffer[0];
-		MTR_tMotor[pMotorComm->unMotorIndex].structMotor.unCommOK_CNT++;
+		unReadItem = MTR_GET_RD_ITEM(pMotorComm->unPayLoad[0]);
+		// Validation check
+		if (unReadItem < COMM_READ_MAX)
+		{
+			MTR_tMotor[pMotorComm->unMotorIndex].unValue[unReadItem] = pMotorCommRxBuffer[0];
+			MTR_tMotor[pMotorComm->unMotorIndex].structMotor.unCommOK_CNT++;
+		}
+		else
+		{
+			MTR_tMotor[pMotorComm->unMotorIndex].structMotor.unCommErrCNT++;
+		}		
 	}
 	else
 	{
 		MTR_tMotor[pMotorComm->unMotorIndex].structMotor.unCommErrCNT++;
-	}
-
+	}		
 }
 
 // If some read commands were sent out and there is more read command in the queue,
@@ -301,7 +258,6 @@ void readFromMotor(MOTOR_SPI_COMM_T* pMotorComm)
 	// 1. Read command
 	osDelay(MTR_COMM_INTVL_MIN);
 	selectMotor(pMotorComm->unMotorIndex);
-	osDelay(1);
 	if(HAL_SPI_TransmitReceive_IT(&MOTOR_COMM_SPI_HANDLER, (uint8_t*)(pMotorComm->unPayLoad), (uint8_t *)(&unTrashData), 1) != HAL_OK)
 	{
 		M_handleErr(NOT_USED_FOR_NOW);
@@ -310,14 +266,12 @@ void readFromMotor(MOTOR_SPI_COMM_T* pMotorComm)
 	{
 		M_handleErr(NOT_USED_FOR_NOW);
 	}
-	osDelay(1);
 	deselectMotor(pMotorComm->unMotorIndex);
 	
 	// 2. CRC
 	osDelay(MTR_COMM_INTVL_MIN);
 	unCRC = calCRC16((uint8_t *)(pMotorComm->unPayLoad), 2);
 	selectMotor(pMotorComm->unMotorIndex);
-	osDelay(1);
 	if(HAL_SPI_TransmitReceive_IT(&MOTOR_COMM_SPI_HANDLER, (uint8_t*)(&unCRC), (uint8_t *)(&unTrashData), 1) != HAL_OK)
 	{
 		M_handleErr(NOT_USED_FOR_NOW);
@@ -326,13 +280,11 @@ void readFromMotor(MOTOR_SPI_COMM_T* pMotorComm)
 	{
 		M_handleErr(NOT_USED_FOR_NOW);
 	}
-	osDelay(1);
 	deselectMotor(pMotorComm->unMotorIndex);
 	
 	// 3. dummy for register value
 	osDelay(MTR_COMM_INTVL_MIN);
 	selectMotor(pMotorComm->unMotorIndex);
-	osDelay(1);
 	if(HAL_SPI_TransmitReceive_IT(&MOTOR_COMM_SPI_HANDLER, (uint8_t*)(T_MOTOR_DUMMY_CMD.unPayLoad), (uint8_t *)unMotorCommRxBuf, 1) != HAL_OK)
 	{
 		M_handleErr(NOT_USED_FOR_NOW);
@@ -341,13 +293,11 @@ void readFromMotor(MOTOR_SPI_COMM_T* pMotorComm)
 	{
 		M_handleErr(NOT_USED_FOR_NOW);
 	}
-	osDelay(1);
 	deselectMotor(pMotorComm->unMotorIndex);	
 	
 		// 4. dummy for CRC
 	osDelay(MTR_COMM_INTVL_MIN);
 	selectMotor(pMotorComm->unMotorIndex);
-	osDelay(1);
 	if(HAL_SPI_TransmitReceive_IT(&MOTOR_COMM_SPI_HANDLER, (uint8_t*)(T_MOTOR_DUMMY_CMD.unPayLoad), (uint8_t *)(unMotorCommRxBuf + 1), 1) != HAL_OK)
 	{
 		M_handleErr(NOT_USED_FOR_NOW);
@@ -356,7 +306,6 @@ void readFromMotor(MOTOR_SPI_COMM_T* pMotorComm)
 	{
 		M_handleErr(NOT_USED_FOR_NOW);
 	}
-	osDelay(1);
 	deselectMotor(pMotorComm->unMotorIndex);	
 	
 	MTR_analyzeReadData(pMotorComm, unMotorCommRxBuf);
@@ -365,12 +314,13 @@ void readFromMotor(MOTOR_SPI_COMM_T* pMotorComm)
 void writeToMotor(MOTOR_SPI_COMM_T* pMotorComm)
 {
 	// write command | write data | CRC
-	static uint16_t unMotorCommRxBuffer[MAX_MOTOR_COMM_LENGTH + 1];
+	static uint16_t unTrashData;
 	static uint16_t unCRC;
 	
 	// 1. write command
+	osDelay(MTR_COMM_INTVL_MIN);
 	selectMotor(pMotorComm->unMotorIndex);
-	if(HAL_SPI_TransmitReceive_IT(&MOTOR_COMM_SPI_HANDLER, (uint8_t*)(pMotorComm->unPayLoad), (uint8_t *)unMotorCommRxBuffer, 1) != HAL_OK)
+	if(HAL_SPI_TransmitReceive_IT(&MOTOR_COMM_SPI_HANDLER, (uint8_t*)(pMotorComm->unPayLoad), (uint8_t *)(&unTrashData), 1) != HAL_OK)
 	{
 		M_handleErr(NOT_USED_FOR_NOW);
 	}
@@ -383,7 +333,7 @@ void writeToMotor(MOTOR_SPI_COMM_T* pMotorComm)
 	// 2. write command
 	osDelay(MTR_COMM_INTVL_MIN);
 	selectMotor(pMotorComm->unMotorIndex);
-	if(HAL_SPI_TransmitReceive_IT(&MOTOR_COMM_SPI_HANDLER, (uint8_t*)(pMotorComm->unPayLoad + 1), (uint8_t *)unMotorCommRxBuffer, 1) != HAL_OK)
+	if(HAL_SPI_TransmitReceive_IT(&MOTOR_COMM_SPI_HANDLER, (uint8_t*)(pMotorComm->unPayLoad + 1), (uint8_t *)(&unTrashData), 1) != HAL_OK)
 	{
 		M_handleErr(NOT_USED_FOR_NOW);
 	}
@@ -397,7 +347,7 @@ void writeToMotor(MOTOR_SPI_COMM_T* pMotorComm)
 	osDelay(MTR_COMM_INTVL_MIN);
 	unCRC = calCRC16((uint8_t *)(pMotorComm->unPayLoad), 4);
 	selectMotor(pMotorComm->unMotorIndex);
-	if(HAL_SPI_TransmitReceive_IT(&MOTOR_COMM_SPI_HANDLER, (uint8_t*)(&unCRC), (uint8_t *)(unMotorCommRxBuffer + 1), 1) != HAL_OK)
+	if(HAL_SPI_TransmitReceive_IT(&MOTOR_COMM_SPI_HANDLER, (uint8_t*)(&unCRC), (uint8_t *)(&unTrashData), 1) != HAL_OK)
 	{
 		M_handleErr(NOT_USED_FOR_NOW);
 	}
@@ -411,26 +361,24 @@ void writeToMotor(MOTOR_SPI_COMM_T* pMotorComm)
 void MTR_MotorComm(void const * argument)
 {
 	static MOTOR_SPI_COMM_T tMotorComm = MTR_DUMMY_CMD_CONTENT;
-	static MOTOR_SPI_COMM_T tMotorCommLast[MOTOR_NUMBER] = {MTR_DUMMY_CMD_CONTENT, MTR_DUMMY_CMD_CONTENT,
-			MTR_DUMMY_CMD_CONTENT, MTR_DUMMY_CMD_CONTENT};
-	static MOTOR_SPI_COMM_T tMotorCommTemp = MTR_DUMMY_CMD_CONTENT;
-	static TickType_t unCommSinceLastTime;
-	static TickType_t	unLastCommTime[MOTOR_NUMBER] = {0, 0, 0, 0};
+//	static MOTOR_SPI_COMM_T tMotorCommLast[MOTOR_NUMBER] = {MTR_DUMMY_CMD_CONTENT, MTR_DUMMY_CMD_CONTENT,
+//			MTR_DUMMY_CMD_CONTENT, MTR_DUMMY_CMD_CONTENT};
+//	static MOTOR_SPI_COMM_T tMotorCommTemp = MTR_DUMMY_CMD_CONTENT;
+//	static TickType_t unCommSinceLastTime;
+//	static TickType_t	unLastCommTime[MOTOR_NUMBER] = {0, 0, 0, 0};
 
 	DESELECT_ALL_MOTOR;
-	tMotorComm.unMotorIndex = 0;	//unMotorIndex;
-	tMotorComm.unPayLoad[0] = COMM_READ_LOCATING_PERIOD | MTR_COMM_RW_CMD_MASK;
 	for(;;)
 	{	
-//		if (xQueueReceive(MotorCommQueueHandle, &tMotorComm, portMAX_DELAY) != pdTRUE)
-//		{
-//			M_handleErr(NOT_USED_FOR_NOW);
-//		}
+		if (xQueueReceive(MotorCommQueueHandle, &tMotorComm, portMAX_DELAY) != pdTRUE)
+		{
+			M_handleErr(NOT_USED_FOR_NOW);
+		}
 
-//		if (tMotorComm.unMotorIndex >= MOTOR_NUMBER)
-//		{
-//			M_handleErr(NOT_USED_FOR_NOW);
-//		}
+		if (tMotorComm.unMotorIndex >= MOTOR_NUMBER)
+		{
+			M_handleErr(NOT_USED_FOR_NOW);
+		}
 
 		/*********************************************************/
 		/* ----======== Pre send command stage start ========----*/
@@ -456,17 +404,16 @@ void MTR_MotorComm(void const * argument)
 //			osDelay(MTR_COMM_INTVL_MIN - unCommSinceLastTime);
 //		}
 
-//		if (IS_MTR_COMM_RD_CMD(tMotorComm.unPayLoad[0])) 
-//		{
-//			// read command
-			readFromMotor(&tMotorComm);
-			
-//		}
-//		else if (IS_MTR_COMM_WR_CMD(tMotorComm.unPayLoad[0]))
-//		{
-//			// write command
-//			writeToMotor(&tMotorComm);
-//		}
+		if (IS_MTR_COMM_RD_CMD(tMotorComm.unPayLoad[0])) 
+		{
+			// read command
+			readFromMotor(&tMotorComm);	
+		}
+		else if (IS_MTR_COMM_WR_CMD(tMotorComm.unPayLoad[0]))
+		{
+			// write command
+			writeToMotor(&tMotorComm);
+		}
 		
 
 
