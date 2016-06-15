@@ -215,6 +215,17 @@ void MTR_unReadMotorStatus(uint8_t unMaxMotorNum)
 			M_handleErr(NOT_USED_FOR_NOW);
 		}
 	}
+	
+	for (unMotorIndex = 0; unMotorIndex < unMaxMotorNum; unMotorIndex++)
+	{
+		tMotorComm.unMotorIndex = unMotorIndex;
+		tMotorComm.unPayLoad[0] = COMM_WRITE_RAMP_UP_DUTY;
+		tMotorComm.unPayLoad[1] = MTR_tMotor[unMotorIndex].structMotor.unRampUpDuty;
+		if (xQueueSendToBack(MotorCommQueueHandle, &tMotorComm, portMAX_DELAY) != pdTRUE)
+		{
+			M_handleErr(NOT_USED_FOR_NOW);
+		}
+	}
 }
 
 

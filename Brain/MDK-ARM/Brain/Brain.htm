@@ -3,7 +3,7 @@
 <title>Static Call Graph - [Brain\Brain.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image Brain\Brain.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060061: Last Updated: Tue Jun 14 22:06:10 2016
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060061: Last Updated: Wed Jun 15 20:54:29 2016
 <BR><P>
 <H3>Maximum Stack Usage =        304 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -1111,8 +1111,8 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> freertos.o(.constdata)
 </UL>
-<P><STRONG><a name="[e6]"></a>MTR_unReadMotorStatus</STRONG> (Thumb, 244 bytes, Stack size 40 bytes, motor.o(i.MTR_unReadMotorStatus))
-<BR><BR>[Stack]<UL><LI>Max Depth = 152<LI>Call Chain = MTR_unReadMotorStatus &rArr; xQueueGenericSend &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
+<P><STRONG><a name="[e6]"></a>MTR_unReadMotorStatus</STRONG> (Thumb, 308 bytes, Stack size 32 bytes, motor.o(i.MTR_unReadMotorStatus))
+<BR><BR>[Stack]<UL><LI>Max Depth = 144<LI>Call Chain = MTR_unReadMotorStatus &rArr; xQueueGenericSend &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
 </UL>
 <BR>[Calls]<UL><LI><a href="#[e7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xQueueGenericSend
 <LI><a href="#[df]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;M_handleErr
@@ -1346,7 +1346,7 @@ Global Symbols
 <BR>[Address Reference Count : 1]<UL><LI> startup_stm32f407xx.o(RESET)
 </UL>
 <P><STRONG><a name="[71]"></a>RTN_updateMotor</STRONG> (Thumb, 48 bytes, Stack size 0 bytes, routine.o(i.RTN_updateMotor))
-<BR><BR>[Stack]<UL><LI>Max Depth = 152<LI>Call Chain = RTN_updateMotor &rArr; MTR_unReadMotorStatus &rArr; xQueueGenericSend &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
+<BR><BR>[Stack]<UL><LI>Max Depth = 144<LI>Call Chain = RTN_updateMotor &rArr; MTR_unReadMotorStatus &rArr; xQueueGenericSend &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
 </UL>
 <BR>[Calls]<UL><LI><a href="#[de]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xQueueGenericReceive
 <LI><a href="#[9a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_TIM_Base_Start_IT
