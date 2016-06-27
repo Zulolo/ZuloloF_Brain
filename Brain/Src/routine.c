@@ -26,8 +26,8 @@ void RTN_updateMotor(void const * argument)
 //	uint8_t unMotorIndex;
 	
 	HAL_ADC_Start_DMA(&MOTOR_SPEED_ADC_HANDLER, (uint32_t *)&unMotorSpeedADC_Buf, MOTOR_SPEED_ADC_DMA_DEPTH);
-	HAL_TIM_Base_Start(&htim2);
-	HAL_TIM_Base_Start_IT(&htim6);
+	HAL_TIM_Base_Start(&ADC_ROUTINE_TIMER_HANDLER);
+	HAL_TIM_Base_Start_IT(&MOTOR_ROUTINE_TIMER_HANDLER);
 	for(;;)
 	{
 		xSemaphoreTake(RTN_tNeedToUpdateMotorHandle, portMAX_DELAY);

@@ -71,11 +71,11 @@ void MX_GPIO_Init(void)
   __HAL_RCC_GPIOB_CLK_ENABLE();
   __HAL_RCC_GPIOD_CLK_ENABLE();
 
-  /*Configure GPIO pin : PtPin */
-  GPIO_InitStruct.Pin = BUTTON_TEST_Pin;
+  /*Configure GPIO pins : PEPin PEPin PEPin PEPin */
+  GPIO_InitStruct.Pin = NRF905_AM_Pin|NRF905_DR_Pin|BUTTON_TEST_Pin|NRF905_CD_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(BUTTON_TEST_GPIO_Port, &GPIO_InitStruct);
+  HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
 
   /*Configure GPIO pin : PtPin */
   GPIO_InitStruct.Pin = SPI1_W25X16_CS_Pin;
@@ -91,8 +91,8 @@ void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : PBPin PBPin */
-  GPIO_InitStruct.Pin = DEMO_LED_Pin|SPI1_MOTOR_SELECT_3_Pin;
+  /*Configure GPIO pins : PBPin PBPin PBPin PBPin */
+  GPIO_InitStruct.Pin = DEMO_LED_Pin|SPI1_MOTOR_SELECT_3_Pin|NRF905_PWR_UP_Pin|NRF905_TRX_CE_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
@@ -105,9 +105,9 @@ void MX_GPIO_Init(void)
   HAL_GPIO_Init(BOOT1_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pins : PEPin PEPin PEPin PEPin 
-                           PEPin */
+                           PEPin PEPin */
   GPIO_InitStruct.Pin = SPI1_MOTOR_SELECT_4_Pin|SPI1_MOTOR_SELECT_5_Pin|SPI1_MOTOR_SELECT_6_Pin|SPI1_MOTOR_SELECT_7_Pin 
-                          |SPI1_MOTOR_SELECT_8_Pin;
+                          |SPI1_MOTOR_SELECT_8_Pin|NRF905_TX_EN_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
@@ -138,11 +138,11 @@ void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(GPIOC, SPI1_MOTOR_SELECT_1_Pin|SPI1_MOTOR_SELECT_2_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOB, DEMO_LED_Pin|SPI1_MOTOR_SELECT_3_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOB, DEMO_LED_Pin|SPI1_MOTOR_SELECT_3_Pin|NRF905_PWR_UP_Pin|NRF905_TRX_CE_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOE, SPI1_MOTOR_SELECT_4_Pin|SPI1_MOTOR_SELECT_5_Pin|SPI1_MOTOR_SELECT_6_Pin|SPI1_MOTOR_SELECT_7_Pin 
-                          |SPI1_MOTOR_SELECT_8_Pin, GPIO_PIN_RESET);
+                          |SPI1_MOTOR_SELECT_8_Pin|NRF905_TX_EN_Pin, GPIO_PIN_RESET);
 
 }
 

@@ -46,10 +46,13 @@ osThreadId myDEMO_LED_TaskHandle;
 osThreadId myMotorCtrlTaskHandle;
 osThreadId myRoutineUpdateHandle;
 osThreadId myMotorCommTaskHandle;
+osThreadId myNRF905CommHandle;
 osMessageQId MotorCommQueueHandle;
-osSemaphoreId MTR_tMotorSpeedChangedHandle;
-osSemaphoreId RTN_tNeedToUpdateMotorHandle;
 osSemaphoreId MTR_tMotorSPI_CommCpltHandle;
+osSemaphoreId RTN_tNeedToUpdateMotorHandle;
+osSemaphoreId MTR_tMotorSpeedChangedHandle;
+osSemaphoreId WL_tNRF905SPI_CommCpltHandle;
+osSemaphoreId tGlobalParaAccessHandle;
 
 /* USER CODE BEGIN Variables */
 
@@ -61,6 +64,7 @@ extern void blinkDemoLED(void const * argument);
 extern void MTR_ctrlMotor(void const * argument);
 extern void RTN_updateMotor(void const * argument);
 extern void MTR_MotorComm(void const * argument);
+extern void WL_startRFComm(void const * argument);
 
 extern void MX_FATFS_Init(void);
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
@@ -83,17 +87,25 @@ void MX_FREERTOS_Init(void) {
   /* USER CODE END RTOS_MUTEX */
 
   /* Create the semaphores(s) */
-  /* definition and creation of MTR_tMotorSpeedChanged */
-  osSemaphoreDef(MTR_tMotorSpeedChanged);
-  MTR_tMotorSpeedChangedHandle = osSemaphoreCreate(osSemaphore(MTR_tMotorSpeedChanged), 10);
+  /* definition and creation of MTR_tMotorSPI_CommCplt */
+  osSemaphoreDef(MTR_tMotorSPI_CommCplt);
+  MTR_tMotorSPI_CommCpltHandle = osSemaphoreCreate(osSemaphore(MTR_tMotorSPI_CommCplt), 1);
 
   /* definition and creation of RTN_tNeedToUpdateMotor */
   osSemaphoreDef(RTN_tNeedToUpdateMotor);
-  RTN_tNeedToUpdateMotorHandle = osSemaphoreCreate(osSemaphore(RTN_tNeedToUpdateMotor), 10);
+  RTN_tNeedToUpdateMotorHandle = osSemaphoreCreate(osSemaphore(RTN_tNeedToUpdateMotor), 1);
 
-  /* definition and creation of MTR_tMotorSPI_CommCplt */
-  osSemaphoreDef(MTR_tMotorSPI_CommCplt);
-  MTR_tMotorSPI_CommCpltHandle = osSemaphoreCreate(osSemaphore(MTR_tMotorSPI_CommCplt), 10);
+  /* definition and creation of MTR_tMotorSpeedChanged */
+  osSemaphoreDef(MTR_tMotorSpeedChanged);
+  MTR_tMotorSpeedChangedHandle = osSemaphoreCreate(osSemaphore(MTR_tMotorSpeedChanged), 1);
+
+  /* definition and creation of WL_tNRF905SPI_CommCplt */
+  osSemaphoreDef(WL_tNRF905SPI_CommCplt);
+  WL_tNRF905SPI_CommCpltHandle = osSemaphoreCreate(osSemaphore(WL_tNRF905SPI_CommCplt), 1);
+
+  /* definition and creation of tGlobalParaAccess */
+  osSemaphoreDef(tGlobalParaAccess);
+  tGlobalParaAccessHandle = osSemaphoreCreate(osSemaphore(tGlobalParaAccess), 10);
 
   /* USER CODE BEGIN RTOS_SEMAPHORES */
   /* add semaphores, ... */
@@ -123,6 +135,10 @@ void MX_FREERTOS_Init(void) {
   /* definition and creation of myMotorCommTask */
   osThreadDef(myMotorCommTask, MTR_MotorComm, osPriorityAboveNormal, 0, 256);
   myMotorCommTaskHandle = osThreadCreate(osThread(myMotorCommTask), NULL);
+
+  /* definition and creation of myNRF905Comm */
+  osThreadDef(myNRF905Comm, WL_startRFComm, osPriorityIdle, 0, 256);
+  myNRF905CommHandle = osThreadCreate(osThread(myNRF905Comm), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */

@@ -39,6 +39,10 @@
 /* Private define ------------------------------------------------------------*/
 #define MOTOR_SPEED_ADC_DMA_DEPTH 32
 
+#define NRF905_AM_Pin GPIO_PIN_2
+#define NRF905_AM_GPIO_Port GPIOE
+#define NRF905_DR_Pin GPIO_PIN_3
+#define NRF905_DR_GPIO_Port GPIOE
 #define BUTTON_TEST_Pin GPIO_PIN_6
 #define BUTTON_TEST_GPIO_Port GPIOE
 #define ADC_MOTOR_SPEED_CTRL_Pin GPIO_PIN_0
@@ -71,6 +75,14 @@
 #define SPI1_MOTOR_SELECT_7_GPIO_Port GPIOE
 #define SPI1_MOTOR_SELECT_8_Pin GPIO_PIN_11
 #define SPI1_MOTOR_SELECT_8_GPIO_Port GPIOE
+#define NRF905_PWR_UP_Pin GPIO_PIN_8
+#define NRF905_PWR_UP_GPIO_Port GPIOB
+#define NRF905_TRX_CE_Pin GPIO_PIN_9
+#define NRF905_TRX_CE_GPIO_Port GPIOB
+#define NRF905_TX_EN_Pin GPIO_PIN_0
+#define NRF905_TX_EN_GPIO_Port GPIOE
+#define NRF905_CD_Pin GPIO_PIN_1
+#define NRF905_CD_GPIO_Port GPIOE
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */

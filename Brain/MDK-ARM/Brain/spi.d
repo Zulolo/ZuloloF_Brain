@@ -43,3 +43,4 @@ brain\spi.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h
 brain\spi.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h
 brain\spi.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h
 brain\spi.o: ../Inc/gpio.h
+brain\spi.o: ../Inc/dma.h
