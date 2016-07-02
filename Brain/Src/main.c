@@ -58,7 +58,8 @@
 
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
-
+extern osSemaphoreId MTR_tMotorSPI_CommCpltHandle;
+extern osSemaphoreId WL_tNRF905SPI_CommCpltHandle;
 
 /* USER CODE END PV */
 
@@ -94,7 +95,19 @@ void M_handleErr(char* pLog)
 	HAL_GPIO_WritePin(GPIO_DEMO_LED_PORT, DEMO_LED_Pin, GPIO_PIN_RESET);
 }
 
-
+//extern osSemaphoreId MTR_tMotorSPI_CommCpltHandle;
+//extern osSemaphoreId RTN_tNeedToUpdateMotorHandle;
+//extern osSemaphoreId MTR_tMotorSpeedChangedHandle;
+//extern osSemaphoreId WL_tNRF905SPI_CommCpltHandle;
+//extern osSemaphoreId tGlobalParaAccessHandle;
+void initBrainVar(void)
+{
+//	osSemaphoreWait(MTR_tMotorSPI_CommCpltHandle, 5);
+//	osSemaphoreWait(RTN_tNeedToUpdateMotorHandle, 5);
+//	osSemaphoreWait(MTR_tMotorSpeedChangedHandle, 5);
+//	osSemaphoreWait(WL_tNRF905SPI_CommCpltHandle, 5);
+//	osSemaphoreWait(tGlobalParaAccessHandle, 5);
+}
 /* USER CODE END 0 */
 
 int main(void)
@@ -158,6 +171,8 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+	initBrainVar();
+	
   while (1)
   {
   /* USER CODE END WHILE */
@@ -209,6 +224,82 @@ void SystemClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
+void HAL_SPI_ErrorCallback(SPI_HandleTypeDef *hspi)
+{
+	static portBASE_TYPE tHigherPriorityTaskWoken;
+	if (hspi->Instance == MOTOR_COMM_SPI_HANDLER.Instance){
+		if ((HAL_SPI_GetError(hspi) & HAL_SPI_ERROR_CRC) != 0)
+		{
+			tHigherPriorityTaskWoken = pdFALSE;
+			xSemaphoreGiveFromISR(MTR_tMotorSPI_CommCpltHandle, &tHigherPriorityTaskWoken);
+			if(tHigherPriorityTaskWoken == pdTRUE)
+			{
+				portEND_SWITCHING_ISR(tHigherPriorityTaskWoken);
+			}
+		}
+	}else if (hspi->Instance == NRF905_COMM_SPI_HANDLER.Instance){
+		tHigherPriorityTaskWoken = pdFALSE;
+		xSemaphoreGiveFromISR(WL_tNRF905SPI_CommCpltHandle, &tHigherPriorityTaskWoken);
+		if(tHigherPriorityTaskWoken == pdTRUE)
+		{
+			portEND_SWITCHING_ISR(tHigherPriorityTaskWoken);
+		}		
+	}
+}
+
+void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi)
+{
+	static portBASE_TYPE tHigherPriorityTaskWoken;
+	if (hspi->Instance == MOTOR_COMM_SPI_HANDLER.Instance){
+		tHigherPriorityTaskWoken = pdFALSE;
+		xSemaphoreGiveFromISR(MTR_tMotorSPI_CommCpltHandle, &tHigherPriorityTaskWoken);
+		if(tHigherPriorityTaskWoken == pdTRUE)
+		{
+			portEND_SWITCHING_ISR(tHigherPriorityTaskWoken);
+		}
+	}else if (hspi->Instance == NRF905_COMM_SPI_HANDLER.Instance){
+		tHigherPriorityTaskWoken = pdFALSE;
+		xSemaphoreGiveFromISR(WL_tNRF905SPI_CommCpltHandle, &tHigherPriorityTaskWoken);
+		if(tHigherPriorityTaskWoken == pdTRUE)
+		{
+			portEND_SWITCHING_ISR(tHigherPriorityTaskWoken);
+		}		
+	}
+}
+
+void HAL_SPI_RxCpltCallback(SPI_HandleTypeDef *hspi)
+{
+	static portBASE_TYPE tHigherPriorityTaskWoken;
+	if (hspi->Instance == MOTOR_COMM_SPI_HANDLER.Instance){
+		tHigherPriorityTaskWoken = pdFALSE;
+		xSemaphoreGiveFromISR(MTR_tMotorSPI_CommCpltHandle, &tHigherPriorityTaskWoken);
+		if(tHigherPriorityTaskWoken == pdTRUE)
+		{
+			portEND_SWITCHING_ISR(tHigherPriorityTaskWoken);
+		}
+	}else if (hspi->Instance == NRF905_COMM_SPI_HANDLER.Instance){
+		tHigherPriorityTaskWoken = pdFALSE;
+		xSemaphoreGiveFromISR(WL_tNRF905SPI_CommCpltHandle, &tHigherPriorityTaskWoken);
+		if(tHigherPriorityTaskWoken == pdTRUE)
+		{
+			portEND_SWITCHING_ISR(tHigherPriorityTaskWoken);
+		}		
+	}
+}
+
+void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef *hspi)
+{
+	static portBASE_TYPE tHigherPriorityTaskWoken;
+	if (hspi->Instance == NRF905_COMM_SPI_HANDLER.Instance)
+	{
+		tHigherPriorityTaskWoken = pdFALSE;
+		xSemaphoreGiveFromISR(WL_tNRF905SPI_CommCpltHandle, &tHigherPriorityTaskWoken);
+		if(tHigherPriorityTaskWoken == pdTRUE)
+		{
+			portEND_SWITCHING_ISR(tHigherPriorityTaskWoken);
+		}
+	}
+}
 
 /* USER CODE END 4 */
 

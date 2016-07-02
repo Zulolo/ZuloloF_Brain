@@ -66,53 +66,6 @@ void deselectMotor(uint8_t unMotorIndex)
 	}
 }
 	
-
-void HAL_SPI_ErrorCallback(SPI_HandleTypeDef *hspi)
-{
-	static portBASE_TYPE tHigherPriorityTaskWoken;
-	if (hspi->Instance == MOTOR_COMM_SPI_HANDLER.Instance)
-	{
-		if ((HAL_SPI_GetError(hspi) & HAL_SPI_ERROR_CRC) != 0)
-		{
-//			__HAL_SPI_CLEAR_CRCERRFLAG(hspi);
-			tHigherPriorityTaskWoken = pdFALSE;
-			xSemaphoreGiveFromISR(MTR_tMotorSPI_CommCpltHandle, &tHigherPriorityTaskWoken);
-			if(tHigherPriorityTaskWoken == pdTRUE)
-			{
-				portEND_SWITCHING_ISR(tHigherPriorityTaskWoken);
-			}
-		}
-	}
-}
-
-void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi)
-{
-	static portBASE_TYPE tHigherPriorityTaskWoken;
-	if (hspi->Instance == MOTOR_COMM_SPI_HANDLER.Instance)
-	{
-		tHigherPriorityTaskWoken = pdFALSE;
-		xSemaphoreGiveFromISR(MTR_tMotorSPI_CommCpltHandle, &tHigherPriorityTaskWoken);
-		if(tHigherPriorityTaskWoken == pdTRUE)
-		{
-			portEND_SWITCHING_ISR(tHigherPriorityTaskWoken);
-		}
-	}
-}
-
-void HAL_SPI_RxCpltCallback(SPI_HandleTypeDef *hspi)
-{
-	static portBASE_TYPE tHigherPriorityTaskWoken;
-	if (hspi->Instance == MOTOR_COMM_SPI_HANDLER.Instance)
-	{
-		tHigherPriorityTaskWoken = pdFALSE;
-		xSemaphoreGiveFromISR(MTR_tMotorSPI_CommCpltHandle, &tHigherPriorityTaskWoken);
-		if(tHigherPriorityTaskWoken == pdTRUE)
-		{
-			portEND_SWITCHING_ISR(tHigherPriorityTaskWoken);
-		}
-	}
-}
-
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc)
 {
 	static portBASE_TYPE tHigherPriorityTaskWoken;

@@ -52,6 +52,7 @@ osSemaphoreId MTR_tMotorSPI_CommCpltHandle;
 osSemaphoreId RTN_tNeedToUpdateMotorHandle;
 osSemaphoreId MTR_tMotorSpeedChangedHandle;
 osSemaphoreId WL_tNRF905SPI_CommCpltHandle;
+osSemaphoreId WL_tNRF905PinChangeHandleHandle;
 osSemaphoreId tGlobalParaAccessHandle;
 
 /* USER CODE BEGIN Variables */
@@ -103,12 +104,21 @@ void MX_FREERTOS_Init(void) {
   osSemaphoreDef(WL_tNRF905SPI_CommCplt);
   WL_tNRF905SPI_CommCpltHandle = osSemaphoreCreate(osSemaphore(WL_tNRF905SPI_CommCplt), 1);
 
+  /* definition and creation of WL_tNRF905PinChangeHandle */
+  osSemaphoreDef(WL_tNRF905PinChangeHandle);
+  WL_tNRF905PinChangeHandleHandle = osSemaphoreCreate(osSemaphore(WL_tNRF905PinChangeHandle), 1);
+
   /* definition and creation of tGlobalParaAccess */
   osSemaphoreDef(tGlobalParaAccess);
   tGlobalParaAccessHandle = osSemaphoreCreate(osSemaphore(tGlobalParaAccess), 10);
 
   /* USER CODE BEGIN RTOS_SEMAPHORES */
   /* add semaphores, ... */
+	osSemaphoreWait(MTR_tMotorSPI_CommCpltHandle, 5);
+	osSemaphoreWait(RTN_tNeedToUpdateMotorHandle, 5);
+	osSemaphoreWait(MTR_tMotorSpeedChangedHandle, 5);
+	osSemaphoreWait(WL_tNRF905SPI_CommCpltHandle, 5);
+
   /* USER CODE END RTOS_SEMAPHORES */
 
   /* USER CODE BEGIN RTOS_TIMERS */

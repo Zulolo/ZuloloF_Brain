@@ -86,10 +86,10 @@ void MX_TIM13_Init(void)
 {
 
   htim13.Instance = TIM13;
-  htim13.Init.Prescaler = 2000;
+  htim13.Init.Prescaler = 719;
   htim13.Init.CounterMode = TIM_COUNTERMODE_UP;
   htim13.Init.Period = 2000;
-  htim13.Init.ClockDivision = TIM_CLOCKDIVISION_DIV4;
+  htim13.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   HAL_TIM_Base_Init(&htim13);
 
 }
@@ -144,7 +144,7 @@ void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* htim_base)
     __HAL_RCC_TIM13_CLK_ENABLE();
 
     /* Peripheral interrupt init */
-    HAL_NVIC_SetPriority(TIM8_UP_TIM13_IRQn, 7, 0);
+    HAL_NVIC_SetPriority(TIM8_UP_TIM13_IRQn, 11, 0);
     HAL_NVIC_EnableIRQ(TIM8_UP_TIM13_IRQn);
   /* USER CODE BEGIN TIM13_MspInit 1 */
 

@@ -59,3 +59,5 @@ brain\stm32f4xx_it.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/timers.
 brain\stm32f4xx_it.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h
 brain\stm32f4xx_it.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/semphr.h
 brain\stm32f4xx_it.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/event_groups.h
+brain\stm32f4xx_it.o: ../Inc/global.h
+brain\stm32f4xx_it.o: ../Inc/rf.h

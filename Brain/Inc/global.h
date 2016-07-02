@@ -11,7 +11,7 @@
 #define NRF905_COMM_SPI_HANDLER					hspi3
 #define ADC_ROUTINE_TIMER_HANDLER				htim2
 #define MOTOR_ROUTINE_TIMER_HANDLER			htim6
-#define NRF905_COMM_TIMEOUT_HANDLER			htim13
+#define NRF905_COMM_TIMEOUT_HANDLER			htim13		// 10us per CNT
 #define ADC_12BIT_MASK				  				0x0FFF
 #define MOTOR_NUMBER										4
 #define BIT_MASK												0x00000001

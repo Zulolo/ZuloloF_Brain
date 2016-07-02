@@ -37,7 +37,10 @@
 #include "cmsis_os.h"
 
 /* USER CODE BEGIN 0 */
+#include "global.h"
+#include "rf.h"
 extern osSemaphoreId RTN_tNeedToUpdateMotorHandle;
+extern osSemaphoreId WL_tNRF905SPI_CommCpltHandle;
 /* USER CODE END 0 */
 
 /* External variables --------------------------------------------------------*/
@@ -171,6 +174,48 @@ void SysTick_Handler(void)
 /******************************************************************************/
 
 /**
+* @brief This function handles EXTI line1 interrupt.
+*/
+void EXTI1_IRQHandler(void)
+{
+  /* USER CODE BEGIN EXTI1_IRQn 0 */
+
+  /* USER CODE END EXTI1_IRQn 0 */
+  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_1);
+  /* USER CODE BEGIN EXTI1_IRQn 1 */
+
+  /* USER CODE END EXTI1_IRQn 1 */
+}
+
+/**
+* @brief This function handles EXTI line2 interrupt.
+*/
+void EXTI2_IRQHandler(void)
+{
+  /* USER CODE BEGIN EXTI2_IRQn 0 */
+
+  /* USER CODE END EXTI2_IRQn 0 */
+  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_2);
+  /* USER CODE BEGIN EXTI2_IRQn 1 */
+
+  /* USER CODE END EXTI2_IRQn 1 */
+}
+
+/**
+* @brief This function handles EXTI line3 interrupt.
+*/
+void EXTI3_IRQHandler(void)
+{
+  /* USER CODE BEGIN EXTI3_IRQn 0 */
+
+  /* USER CODE END EXTI3_IRQn 0 */
+  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_3);
+  /* USER CODE BEGIN EXTI3_IRQn 1 */
+
+  /* USER CODE END EXTI3_IRQn 1 */
+}
+
+/**
 * @brief This function handles DMA1 stream0 global interrupt.
 */
 void DMA1_Stream0_IRQHandler(void)
@@ -232,11 +277,17 @@ void SPI1_IRQHandler(void)
 void TIM8_UP_TIM13_IRQHandler(void)
 {
   /* USER CODE BEGIN TIM8_UP_TIM13_IRQn 0 */
-
+	static portBASE_TYPE tHigherPriorityTaskWoken;
   /* USER CODE END TIM8_UP_TIM13_IRQn 0 */
   HAL_TIM_IRQHandler(&htim13);
   /* USER CODE BEGIN TIM8_UP_TIM13_IRQn 1 */
-
+	HAL_TIM_Base_Stop(&htim13);
+	tHigherPriorityTaskWoken = pdFALSE;
+	xSemaphoreGiveFromISR(WL_tNRF905SPI_CommCpltHandle, &tHigherPriorityTaskWoken);
+	if(tHigherPriorityTaskWoken == pdTRUE)
+	{
+		portEND_SWITCHING_ISR(tHigherPriorityTaskWoken);
+	}
   /* USER CODE END TIM8_UP_TIM13_IRQn 1 */
 }
 
