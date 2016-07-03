@@ -56,12 +56,12 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
   }
 }
 
-WAIT_PIN_CHANGE_RSLT_T WL_WaitPinRiseWithTimeout(GPIO_TypeDef* pGPIO_Port, uint16_t unGPIO_Pin, uint32_t unWL_TimeoutUs)
+WAIT_PIN_CHANGE_RSLT_T WL_WaitPinRiseWithTimeout(GPIO_TypeDef* pGPIO_Port, uint16_t unGPIO_Pin, uint32_t unWL_Timeout10Us)
 {
 	if (HAL_GPIO_ReadPin(pGPIO_Port, unGPIO_Pin) == GPIO_PIN_SET){
 		return PIN_CHANGE_ALREADY_MATCH;
 	}
-	__HAL_TIM_SET_AUTORELOAD(&NRF905_COMM_TIMEOUT_HANDLER, unWL_TimeoutUs / 10);
+	__HAL_TIM_SET_AUTORELOAD(&NRF905_COMM_TIMEOUT_HANDLER, unWL_Timeout10Us);
 	HAL_TIM_Base_Start_IT(&NRF905_COMM_TIMEOUT_HANDLER);
 
 	xSemaphoreTake(WL_tNRF905SPI_CommCpltHandle, portMAX_DELAY);
@@ -148,25 +148,14 @@ void WL_startRFComm(void const * argument)
 			break;
 
 		case NRF905_STATE_HOPPING:
-			if (nRF905Hopping(nRF905SPI_Fd) < 0){
-				tNRF905State = NRF905_STATE_END;
-			}else{
-				tNRF905State = NRF905_STATE_CD;
-			}
+
 			break;
 
 		case NRF905_STATE_CD:
-			if (tRemoteControlMap.unNRF905CommSendFrameErr > NRF905_MAX_COMM_ERR_BEFORE_HOPPING){
+			if (WL_WaitPinRiseWithTimeout(NRF905_CD_GPIO_Port, NRF905_CD_Pin, NRF905_SAME_FRQ_MAX_TIME) == PIN_CHANGE_TIMEOUT){
 				tNRF905State = NRF905_STATE_HOPPING;
 			}else{
-				if (nRF905SendFrame(nRF905SPI_Fd, tNRF905CommTask, tRemoteControlMap.unNRF905RX_Address) < 0){
-					tRemoteControlMap.unNRF905CommSendFrameErr++;
-					tRemoteControlMap.unNRF905CommSendFrameErrTotal++;
-					tNRF905State = NRF905_STATE_END;
-				}else{
-					tRemoteControlMap.unNRF905CommSendFrameOK++;
-					tNRF905State = NRF905_STATE_END;
-				}
+				tNRF905State = NRF905_STATE_RXING;
 			}
 
 			break;
