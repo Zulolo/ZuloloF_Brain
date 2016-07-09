@@ -325,13 +325,15 @@ void writeToMotor(MOTOR_SPI_COMM_T* pMotorComm)
 void MTR_MotorComm(void const * argument)
 {
 	static MOTOR_SPI_COMM_T tMotorComm = MTR_DUMMY_CMD_CONTENT;
-//	static MOTOR_SPI_COMM_T tMotorCommLast[MOTOR_NUMBER] = {MTR_DUMMY_CMD_CONTENT, MTR_DUMMY_CMD_CONTENT,
-//			MTR_DUMMY_CMD_CONTENT, MTR_DUMMY_CMD_CONTENT};
-//	static MOTOR_SPI_COMM_T tMotorCommTemp = MTR_DUMMY_CMD_CONTENT;
-//	static TickType_t unCommSinceLastTime;
-//	static TickType_t	unLastCommTime[MOTOR_NUMBER] = {0, 0, 0, 0};
 
 	DESELECT_ALL_MOTOR;
+	// Since although set SPI as Mode 0 (CLK Polarity is Low), the start status of CLK pin may be high
+	// Send one any/dummy data to no one (NOT selecting any motor) to reset CLK pin
+	if(HAL_SPI_Transmit(&MOTOR_COMM_SPI_HANDLER, (uint8_t *)CRC_TABLE16, 1, 10) != HAL_OK)
+	{
+		M_handleErr(NOT_USED_FOR_NOW);
+	}
+	osDelay(2);
 	for(;;)
 	{	
 		if (xQueueReceive(MotorCommQueueHandle, &tMotorComm, portMAX_DELAY) != pdTRUE)
@@ -344,30 +346,6 @@ void MTR_MotorComm(void const * argument)
 			M_handleErr(NOT_USED_FOR_NOW);
 		}
 
-		/*********************************************************/
-		/* ----======== Pre send command stage start ========----*/
-		// If this command belongs to a different motor and last time command is one read command
-		// DUMMY/Invalid command is already considered in IS_MTR_COMM_RD_CMD macro
-//		if ((tMotorComm.unMotorIndex != tMotorCommLast.unMotorIndex) && IS_MTR_COMM_RD_CMD(tMotorCommLast.unPayLoad[0]))
-//		{
-//			sendDummyCMDtoRead(&tMotorCommLast, unMotorCommRxBuffer);
-//			tMotorCommLast.unMotorIndex = MTR_INVALID_MOTOR_INDEX;
-//			tMotorCommLast.unPayLoad[0] = MTR_INVALID_MOTOR_CMD;
-//			osDelay(10);
-//		}
-		/* ----======== Pre send command stage end ========----*/
-		/*********************************************************/
-
-		
-
-		/*********************************************************/
-		/* ----======== Send command stage start ========----*/
-//		unCommSinceLastTime = (TickType_t)(xTaskGetTickCount() - unLastCommTime[tMotorComm.unMotorIndex]);
-//		if (unCommSinceLastTime < MTR_COMM_INTVL_MIN)
-//		{
-//			osDelay(MTR_COMM_INTVL_MIN - unCommSinceLastTime);
-//		}
-
 		if (IS_MTR_COMM_RD_CMD(tMotorComm.unPayLoad[0])) 
 		{
 			// read command
@@ -378,34 +356,5 @@ void MTR_MotorComm(void const * argument)
 			// write command
 			writeToMotor(&tMotorComm);
 		}
-		
-
-
-		/* ----======== Send command stage end ========----*/
-		/*********************************************************/
-
-
-		/*********************************************************/
-		/* ----======== After send command stage start ========----*/
-		// There is no read command anymore, send dummy command to retrieve all read data (if the previously transaction are read)
-//		if (uxQueueMessagesWaiting(MotorCommQueueHandle) == 0)
-//		{
-//			// No communication any more,
-//			retrieveAllReadData(tMotorCommLast, unLastCommTime);
-//		}
-//		else
-//		{
-//			if (xQueuePeek(MotorCommQueueHandle, &tMotorCommTemp, portMAX_DELAY) != pdTRUE)
-//			{
-//				M_handleErr(NOT_USED_FOR_NOW);
-//			}
-//			if (IS_MTR_COMM_WR_CMD(tMotorCommTemp.unPayLoad[0]) && IS_MTR_COMM_RD_CMD(tMotorComm.unPayLoad[0]))
-//			{
-//				retrieveAllReadData(tMotorCommLast, unLastCommTime);
-//			}
-//		}
-
-		/* ----======== After send command stage end ========----*/
-		/*********************************************************/
 	}
 }

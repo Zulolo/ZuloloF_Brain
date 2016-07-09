@@ -77,14 +77,14 @@ void blinkDemoLED(void const * argument)
 {
   for(;;)
   {
-    if (ERROR == tErrorStatus)
-    {
-      HAL_GPIO_WritePin(GPIO_DEMO_LED_PORT, DEMO_LED_Pin, GPIO_PIN_RESET);
-    }
-    else
-    {
-      HAL_GPIO_TogglePin(GPIO_DEMO_LED_PORT, DEMO_LED_Pin);
-    }
+//    if (ERROR == tErrorStatus)
+//    {
+//      HAL_GPIO_WritePin(GPIO_DEMO_LED_PORT, DEMO_LED_Pin, GPIO_PIN_RESET);
+//    }
+//    else
+//    {
+//      HAL_GPIO_TogglePin(GPIO_DEMO_LED_PORT, DEMO_LED_Pin);
+//    }
     osDelay(1000);
   }
 }
