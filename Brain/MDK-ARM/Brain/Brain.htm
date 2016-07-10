@@ -3,7 +3,7 @@
 <title>Static Call Graph - [Brain\Brain.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image Brain\Brain.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060061: Last Updated: Sat Jul 09 17:49:16 2016
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060061: Last Updated: Sun Jul 10 17:17:45 2016
 <BR><P>
 <H3>Maximum Stack Usage =        336 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -636,7 +636,7 @@ Global Symbols
 <LI><a href="#[c7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USB_DevDisconnect
 </UL>
 
-<P><STRONG><a name="[97]"></a>HAL_GPIO_EXTI_Callback</STRONG> (Thumb, 52 bytes, Stack size 8 bytes, rf.o(i.HAL_GPIO_EXTI_Callback))
+<P><STRONG><a name="[97]"></a>HAL_GPIO_EXTI_Callback</STRONG> (Thumb, 56 bytes, Stack size 8 bytes, rf.o(i.HAL_GPIO_EXTI_Callback))
 <BR><BR>[Stack]<UL><LI>Max Depth = 48<LI>Call Chain = HAL_GPIO_EXTI_Callback &rArr; xQueueGiveFromISR &rArr; xTaskRemoveFromEventList
 </UL>
 <BR>[Calls]<UL><LI><a href="#[89]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xQueueGiveFromISR
@@ -1050,6 +1050,7 @@ Global Symbols
 <BR>[Calls]<UL><LI><a href="#[90]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_DMA_Start_IT
 </UL>
 <BR>[Called By]<UL><LI><a href="#[133]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;nRF905_SPI_WR
+<LI><a href="#[129]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;nRF905CR_Initial
 </UL>
 
 <P><STRONG><a name="[d8]"></a>HAL_SPI_TxCpltCallback</STRONG> (Thumb, 52 bytes, Stack size 8 bytes, main.o(i.HAL_SPI_TxCpltCallback))
@@ -1696,7 +1697,7 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> startup_stm32f407xx.o(RESET)
 </UL>
-<P><STRONG><a name="[127]"></a>WL_WaitPinRiseWithTimeout</STRONG> (Thumb, 64 bytes, Stack size 16 bytes, rf.o(i.WL_WaitPinRiseWithTimeout))
+<P><STRONG><a name="[127]"></a>WL_WaitPinRiseWithTimeout</STRONG> (Thumb, 68 bytes, Stack size 16 bytes, rf.o(i.WL_WaitPinRiseWithTimeout))
 <BR><BR>[Stack]<UL><LI>Max Depth = 128<LI>Call Chain = WL_WaitPinRiseWithTimeout &rArr; xQueueGenericReceive &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
 </UL>
 <BR>[Calls]<UL><LI><a href="#[f3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xQueueGenericReceive
@@ -1707,7 +1708,7 @@ Global Symbols
 <LI><a href="#[7a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;WL_startRFComm
 </UL>
 
-<P><STRONG><a name="[7a]"></a>WL_startRFComm</STRONG> (Thumb, 258 bytes, Stack size 8 bytes, rf.o(i.WL_startRFComm))
+<P><STRONG><a name="[7a]"></a>WL_startRFComm</STRONG> (Thumb, 266 bytes, Stack size 8 bytes, rf.o(i.WL_startRFComm))
 <BR><BR>[Stack]<UL><LI>Max Depth = 160<LI>Call Chain = WL_startRFComm &rArr; nRF905SendFrame &rArr; nRF905_SPI_WR &rArr; xQueueGenericReceive &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
 </UL>
 <BR>[Calls]<UL><LI><a href="#[12a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vTaskSuspend
@@ -2197,6 +2198,7 @@ Global Symbols
 <LI><a href="#[133]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;nRF905_SPI_WR
 <LI><a href="#[12d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;nRF905_SPI_RD
 <LI><a href="#[127]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;WL_WaitPinRiseWithTimeout
+<LI><a href="#[129]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;nRF905CR_Initial
 <LI><a href="#[f5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;writeToMotor
 <LI><a href="#[f4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;readFromMotor
 <LI><a href="#[78]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;RTN_updateMotor
@@ -2439,10 +2441,12 @@ Local Symbols
 <LI><a href="#[129]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;nRF905CR_Initial
 </UL>
 
-<P><STRONG><a name="[129]"></a>nRF905CR_Initial</STRONG> (Thumb, 80 bytes, Stack size 8 bytes, rf.o(i.nRF905CR_Initial))
+<P><STRONG><a name="[129]"></a>nRF905CR_Initial</STRONG> (Thumb, 96 bytes, Stack size 8 bytes, rf.o(i.nRF905CR_Initial))
 <BR><BR>[Stack]<UL><LI>Max Depth = 144<LI>Call Chain = nRF905CR_Initial &rArr; nRF905_SPI_WR &rArr; xQueueGenericReceive &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
 </UL>
-<BR>[Calls]<UL><LI><a href="#[f2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osDelay
+<BR>[Calls]<UL><LI><a href="#[f3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xQueueGenericReceive
+<LI><a href="#[f2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osDelay
+<LI><a href="#[d7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_SPI_Transmit_DMA
 <LI><a href="#[12c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;setNRF905Mode
 <LI><a href="#[133]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;nRF905_SPI_WR
 <LI><a href="#[12d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;nRF905_SPI_RD

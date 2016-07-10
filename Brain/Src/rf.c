@@ -42,11 +42,15 @@ int32_t setNRF905Mode(nRF905Mode_t tNRF905Mode)
 	return 0;
 }
 
+#define DISABLE_NRF905_STATUS_PIN_EXTI					(EXTI->IMR & (~(NRF905_AM_Pin | NRF905_DR_Pin | NRF905_CD_Pin)))
+#define CLEAR_NRF905_STATUS_PIN_EXTI_PENDING		(EXTI->PR | (NRF905_AM_Pin | NRF905_DR_Pin | NRF905_CD_Pin))
+#define ENABLE_NRF905_STATUS_PIN_EXTI(unPin)		(EXTI->IMR | (unPin))
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
 	static portBASE_TYPE tHigherPriorityTaskWoken;
   if ((GPIO_Pin == NRF905_AM_Pin) || (GPIO_Pin == NRF905_DR_Pin) || (GPIO_Pin == NRF905_CD_Pin))
   {
+		DISABLE_NRF905_STATUS_PIN_EXTI;
 		tHigherPriorityTaskWoken = pdFALSE;
 		xSemaphoreGiveFromISR(WL_tNRF905SPI_CommCpltHandle, &tHigherPriorityTaskWoken);
 		if(tHigherPriorityTaskWoken == pdTRUE)
@@ -61,6 +65,7 @@ WAIT_PIN_CHANGE_RSLT_T WL_WaitPinRiseWithTimeout(GPIO_TypeDef* pGPIO_Port, uint1
 	if (HAL_GPIO_ReadPin(pGPIO_Port, unGPIO_Pin) == GPIO_PIN_SET){
 		return PIN_CHANGE_ALREADY_MATCH;
 	}
+	ENABLE_NRF905_STATUS_PIN_EXTI(unGPIO_Pin);
 	__HAL_TIM_SET_AUTORELOAD(&NRF905_COMM_TIMEOUT_HANDLER, unWL_Timeout10Us);
 	HAL_TIM_Base_Start_IT(&NRF905_COMM_TIMEOUT_HANDLER);
 
@@ -138,7 +143,12 @@ static int32_t nRF905CR_Initial(void)
 	uint8_t* pRXwStatus;
 
 	setNRF905Mode(NRF905_MODE_STD_BY);
-	osDelay(4);
+	
+	// Since although set SPI as Mode 0 (CLK Polarity is Low), the start status of CLK pin may be high
+	// Send one any/dummy data to no one (nRF905 CS NOT selected) to reset CLK pin
+	HAL_SPI_Transmit_DMA(&NRF905_COMM_SPI_HANDLER, (uint8_t *)NRF905_CR_DEFAULT, 2);
+	xSemaphoreTake(WL_tNRF905SPI_CommCpltHandle, portMAX_DELAY);
+	
 	nRF905_SPI_WR(NRF905_CMD_WC(0), NRF905_CR_DEFAULT, ARRAY_SIZE(NRF905_CR_DEFAULT));
 	osDelay(2);
 	nRF905_SPI_WR(NRF905_CMD_WC(0), NRF905_CR_DEFAULT, ARRAY_SIZE(NRF905_CR_DEFAULT));
@@ -185,6 +195,8 @@ void WL_startRFComm(void const * argument)
 	static uint8_t unHoppingTableIndex = 0;
 	uint8_t* pRxPayload;
 
+	DISABLE_NRF905_STATUS_PIN_EXTI;
+	CLEAR_NRF905_STATUS_PIN_EXTI_PENDING;
 	HAL_TIM_OnePulse_Init(&NRF905_COMM_TIMEOUT_HANDLER, TIM_OPMODE_SINGLE);
 	if (nRF905CR_Initial() < 0){
 		M_handleErr(NULL);
