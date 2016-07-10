@@ -3,7 +3,7 @@
 <title>Static Call Graph - [Brain\Brain.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image Brain\Brain.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060061: Last Updated: Sun Jul 10 17:17:45 2016
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060061: Last Updated: Sun Jul 10 21:13:52 2016
 <BR><P>
 <H3>Maximum Stack Usage =        336 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -446,7 +446,7 @@ Global Symbols
 <BR><BR>[Calls]<UL><LI><a href="#[7f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_memset
 </UL>
 
-<P><STRONG><a name="[135]"></a>memcmp</STRONG> (Thumb, 26 bytes, Stack size 12 bytes, memcmp.o(.text))
+<P><STRONG><a name="[134]"></a>memcmp</STRONG> (Thumb, 26 bytes, Stack size 12 bytes, memcmp.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 12<LI>Call Chain = memcmp
 </UL>
 <BR>[Called By]<UL><LI><a href="#[129]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;nRF905CR_Initial
@@ -1789,7 +1789,7 @@ Global Symbols
 <BR><BR>[Stack]<UL><LI>Max Depth = 152<LI>Call Chain = nRF905ChnPwrManager &rArr; nRF905_SPI_WR &rArr; xQueueGenericReceive &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
 </UL>
 <BR>[Calls]<UL><LI><a href="#[133]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;nRF905_SPI_WR
-<LI><a href="#[134]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;nGetAddrFromCH_NO
+<LI><a href="#[135]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;nGetAddrFromCH_NO
 </UL>
 <BR>[Called By]<UL><LI><a href="#[7a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;WL_startRFComm
 </UL>
@@ -2436,13 +2436,13 @@ Local Symbols
 <BR><BR>[Called By]<UL><LI><a href="#[106]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osThreadCreate
 </UL>
 
-<P><STRONG><a name="[134]"></a>nGetAddrFromCH_NO</STRONG> (Thumb, 28 bytes, Stack size 0 bytes, rf.o(i.nGetAddrFromCH_NO))
+<P><STRONG><a name="[135]"></a>nGetAddrFromCH_NO</STRONG> (Thumb, 28 bytes, Stack size 0 bytes, rf.o(i.nGetAddrFromCH_NO))
 <BR><BR>[Called By]<UL><LI><a href="#[12b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;nRF905ChnPwrManager
 <LI><a href="#[129]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;nRF905CR_Initial
 </UL>
 
-<P><STRONG><a name="[129]"></a>nRF905CR_Initial</STRONG> (Thumb, 96 bytes, Stack size 8 bytes, rf.o(i.nRF905CR_Initial))
-<BR><BR>[Stack]<UL><LI>Max Depth = 144<LI>Call Chain = nRF905CR_Initial &rArr; nRF905_SPI_WR &rArr; xQueueGenericReceive &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
+<P><STRONG><a name="[129]"></a>nRF905CR_Initial</STRONG> (Thumb, 114 bytes, Stack size 16 bytes, rf.o(i.nRF905CR_Initial))
+<BR><BR>[Stack]<UL><LI>Max Depth = 152<LI>Call Chain = nRF905CR_Initial &rArr; nRF905_SPI_WR &rArr; xQueueGenericReceive &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
 </UL>
 <BR>[Calls]<UL><LI><a href="#[f3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xQueueGenericReceive
 <LI><a href="#[f2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osDelay
@@ -2450,8 +2450,8 @@ Local Symbols
 <LI><a href="#[12c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;setNRF905Mode
 <LI><a href="#[133]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;nRF905_SPI_WR
 <LI><a href="#[12d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;nRF905_SPI_RD
-<LI><a href="#[134]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;nGetAddrFromCH_NO
-<LI><a href="#[135]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;memcmp
+<LI><a href="#[135]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;nGetAddrFromCH_NO
+<LI><a href="#[134]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;memcmp
 </UL>
 <BR>[Called By]<UL><LI><a href="#[7a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;WL_startRFComm
 </UL>

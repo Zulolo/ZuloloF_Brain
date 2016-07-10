@@ -79,10 +79,10 @@ WAIT_PIN_CHANGE_RSLT_T WL_WaitPinRiseWithTimeout(GPIO_TypeDef* pGPIO_Port, uint1
 
 static int32_t nGetAddrFromCH_NO(uint16_t unChannelNumber, uint8_t* pRX_Address)
 {
-	pRX_Address[0] = (uint8_t)(unChannelNumber & 0x03);
-	pRX_Address[1] = (uint8_t)(unChannelNumber & 0x0D);
-	pRX_Address[2] = (uint8_t)(unChannelNumber & 0x50);
-	pRX_Address[3] = (uint8_t)(unChannelNumber & 0xAA);
+	pRX_Address[0] = (uint8_t)(unChannelNumber & 0x03);		// 0x00
+	pRX_Address[1] = (uint8_t)(unChannelNumber & 0x0D);		// 0x0C
+	pRX_Address[2] = (uint8_t)(unChannelNumber & 0x50);		// 0x40
+	pRX_Address[3] = (uint8_t)(unChannelNumber & 0xAA);		// 0x08
 	return 0;
 }
 
@@ -153,14 +153,17 @@ static int32_t nRF905CR_Initial(void)
 	osDelay(2);
 	nRF905_SPI_WR(NRF905_CMD_WC(0), NRF905_CR_DEFAULT, ARRAY_SIZE(NRF905_CR_DEFAULT));
 
-	nGetAddrFromCH_NO(NRF905_CR_DEFAULT[0] | ((uint16_t)(NRF905_CR_DEFAULT[1] & 0x01) << 8), (uint8_t*)(&(tRemoteControlMap.unNRF905RX_Address)));
-
 	pRXwStatus = nRF905_SPI_RD(NRF905_CMD_RC(0), ARRAY_SIZE(NRF905_CR_DEFAULT));
 
 	if (NULL == pRXwStatus){
 		return (-1);
 	}
 	if (memcmp(pRXwStatus + 1, NRF905_CR_DEFAULT, ARRAY_SIZE(NRF905_CR_DEFAULT)) != 0){
+		return (-1);
+	}
+	nGetAddrFromCH_NO(NRF905_CR_DEFAULT[0] | ((uint16_t)(NRF905_CR_DEFAULT[1] & 0x01) << 8),
+		(uint8_t*)(&(tRemoteControlMap.unNRF905RX_Address)));
+	if (nRF905_SPI_WR(NRF905_CMD_WTA, (uint8_t*)(&(tRemoteControlMap.unNRF905RX_Address)), NRF905_TX_ADDR_LEN) < 0){
 		return (-1);
 	}
 	return 0;
@@ -224,7 +227,7 @@ void WL_startRFComm(void const * argument)
 		case NRF905_STATE_CD:
 			setNRF905Mode(NRF905_MODE_BURST_RX);
 			if (WL_WaitPinRiseWithTimeout(NRF905_CD_GPIO_Port, NRF905_CD_Pin, NRF905_SAME_CHN_MAX_TIME) == PIN_CHANGE_TIMEOUT){
-				tNRF905State = NRF905_STATE_HOPPING;
+				tNRF905State = NRF905_STATE_CD;	//NRF905_STATE_HOPPING;
 			}else{
 				tNRF905State = NRF905_STATE_AM;
 			}				
