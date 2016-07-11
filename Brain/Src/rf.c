@@ -186,9 +186,11 @@ int32_t nRF905ChnPwrManager(uint16_t unFrqPwr)
 	if (nRF905_SPI_WR(NRF905_CMD_WC(NRF905_RX_ADDRESS_IN_CR), (uint8_t*)(&(tRemoteControlMap.unNRF905RX_Address)), NRF905_RX_ADDR_LEN) < 0){
 		return (-1);
 	}
+
 	if (nRF905_SPI_WR(NRF905_CMD_WTA, (uint8_t*)(&(tRemoteControlMap.unNRF905RX_Address)), NRF905_TX_ADDR_LEN) < 0){
 		return (-1);
 	}
+
 	return 0;
 }
 
@@ -227,7 +229,7 @@ void WL_startRFComm(void const * argument)
 		case NRF905_STATE_CD:
 			setNRF905Mode(NRF905_MODE_BURST_RX);
 			if (WL_WaitPinRiseWithTimeout(NRF905_CD_GPIO_Port, NRF905_CD_Pin, NRF905_SAME_CHN_MAX_TIME) == PIN_CHANGE_TIMEOUT){
-				tNRF905State = NRF905_STATE_CD;	//NRF905_STATE_HOPPING;
+				tNRF905State = NRF905_STATE_HOPPING;
 			}else{
 				tNRF905State = NRF905_STATE_AM;
 			}				
@@ -257,7 +259,6 @@ void WL_startRFComm(void const * argument)
 					tNRF905State = NRF905_STATE_CD;				
 				}
 			}else{
-				tRemoteControlMap.unNRF905CommRecvFrameErr = 0;
 				// Read data from nRF905
 				pRxPayload = nRF905_SPI_RD(NRF905_CMD_RRP, NRF905_RX_PAYLOAD_LEN);
 				if (NULL == pRxPayload){
@@ -270,8 +271,11 @@ void WL_startRFComm(void const * argument)
 						// Ready to response
 						if (nRF905SendFrame(pRxPayload, NRF905_RX_PAYLOAD_LEN) < 0 ){
 							tNRF905State = NRF905_STATE_END;
-						}
-						tNRF905State = NRF905_STATE_CD;									
+						}else{
+							tNRF905State = NRF905_STATE_CD;	
+							tRemoteControlMap.unNRF905CommRecvFrameErr = 0;
+							tRemoteControlMap.unNRF905CommRecvFrameOK++;
+						}							
 					}	
 				}
 			}
