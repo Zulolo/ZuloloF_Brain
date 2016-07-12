@@ -281,7 +281,7 @@ void TIM8_UP_TIM13_IRQHandler(void)
   /* USER CODE END TIM8_UP_TIM13_IRQn 0 */
   HAL_TIM_IRQHandler(&htim13);
   /* USER CODE BEGIN TIM8_UP_TIM13_IRQn 1 */
-	HAL_TIM_Base_Stop(&htim13);
+	HAL_TIM_Base_Stop_IT(&htim13);
 	tHigherPriorityTaskWoken = pdFALSE;
 	xSemaphoreGiveFromISR(WL_tNRF905SPI_CommCpltHandle, &tHigherPriorityTaskWoken);
 	if(tHigherPriorityTaskWoken == pdTRUE)
