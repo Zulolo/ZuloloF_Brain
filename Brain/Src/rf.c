@@ -20,6 +20,7 @@
 #include "main.h"
 
 extern osSemaphoreId WL_tNRF905SPI_CommCpltHandle;
+uint8_t unRF905_SPI_RX_Frame[NRF905_RX_PAYLOAD_LEN + 1];
 
 int32_t setNRF905Mode(nRF905Mode_t tNRF905Mode)
 {
@@ -89,7 +90,7 @@ static int32_t nGetAddrFromCH_NO(uint16_t unChannelNumber, uint8_t* pRX_Address)
 
 int32_t nRF905_SPI_WR(uint8_t unCMD, const uint8_t* pData, uint16_t unFrameLength)
 {
-	static uint8_t unRF905_SPI_TX_Frame[NRF905_RX_PAYLOAD_LEN + 1];
+	static uint8_t unRF905_SPI_TX_Frame[NRF905_TX_PAYLOAD_LEN + 1];
 	if (unFrameLength > NRF905_RX_PAYLOAD_LEN){
 		return (-1);
 	}
@@ -106,7 +107,7 @@ int32_t nRF905_SPI_WR(uint8_t unCMD, const uint8_t* pData, uint16_t unFrameLengt
 uint8_t* nRF905_SPI_RD(uint8_t unCMD, int16_t unFrameLength)
 {
 	static uint8_t unRF905_SPI_TX_Frame[NRF905_RX_PAYLOAD_LEN + 1];
-	static uint8_t unRF905_SPI_RX_Frame[NRF905_RX_PAYLOAD_LEN + 1];
+	
 	if (unFrameLength > NRF905_RX_PAYLOAD_LEN){
 		return NULL;
 	}
@@ -270,7 +271,7 @@ void WL_startRFComm(void const * argument)
 						tNRF905State = NRF905_STATE_END;
 					}else{
 						// Ready to response
-						if (nRF905SendFrame(pRxPayload, NRF905_RX_PAYLOAD_LEN) < 0 ){
+						if (nRF905SendFrame(pRxPayload + 1, NRF905_RX_PAYLOAD_LEN) < 0 ){
 							tNRF905State = NRF905_STATE_END;
 						}else{
 							tNRF905State = NRF905_STATE_CD;	
