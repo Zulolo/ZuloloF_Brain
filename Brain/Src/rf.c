@@ -43,15 +43,28 @@ int32_t setNRF905Mode(nRF905Mode_t tNRF905Mode)
 	return 0;
 }
 
-#define DISABLE_NRF905_STATUS_PIN_EXTI					(EXTI->IMR & (~(NRF905_AM_Pin | NRF905_DR_Pin | NRF905_CD_Pin)))
-#define CLEAR_NRF905_STATUS_PIN_EXTI_PENDING		(EXTI->PR | (NRF905_AM_Pin | NRF905_DR_Pin | NRF905_CD_Pin))
+#define DISABLE_NRF905_DR_PIN_EXTI							(EXTI->IMR & (~(NRF905_DR_Pin)))
+#define CLEAR_NRF905_DR_PIN_EXTI_PENDING				(EXTI->PR | (NRF905_DR_Pin))
 #define ENABLE_NRF905_STATUS_PIN_EXTI(unPin)		(EXTI->IMR | (unPin))
+
+void waitPinCleaning(void)
+{
+	HAL_TIM_Base_Stop_IT(&NRF905_COMM_TIMEOUT_HANDLER);
+	DISABLE_NRF905_DR_PIN_EXTI;
+	if (__HAL_TIM_GET_FLAG(&NRF905_COMM_TIMEOUT_HANDLER, TIM_FLAG_UPDATE)){
+		__HAL_TIM_CLEAR_FLAG(&NRF905_COMM_TIMEOUT_HANDLER, TIM_FLAG_UPDATE);
+	}
+	if (__HAL_GPIO_EXTI_GET_FLAG(NRF905_DR_Pin)){
+		CLEAR_NRF905_DR_PIN_EXTI_PENDING;
+	}
+}
+
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
 	static portBASE_TYPE tHigherPriorityTaskWoken;
-  if ((GPIO_Pin == NRF905_AM_Pin) || (GPIO_Pin == NRF905_DR_Pin) || (GPIO_Pin == NRF905_CD_Pin))
+  if (NRF905_DR_Pin == GPIO_Pin)
   {
-		DISABLE_NRF905_STATUS_PIN_EXTI;
+		waitPinCleaning();
 		tHigherPriorityTaskWoken = pdFALSE;
 		xSemaphoreGiveFromISR(WL_tNRF905SPI_CommCpltHandle, &tHigherPriorityTaskWoken);
 		if(tHigherPriorityTaskWoken == pdTRUE)
@@ -63,15 +76,22 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 
 WAIT_PIN_CHANGE_RSLT_T WL_WaitPinRiseWithTimeout(GPIO_TypeDef* pGPIO_Port, uint16_t unGPIO_Pin, uint32_t unWL_Timeout10Us)
 {
+	waitPinCleaning();
+	xSemaphoreTake(WL_tNRF905SPI_CommCpltHandle, 0);
+	
 	if (HAL_GPIO_ReadPin(pGPIO_Port, unGPIO_Pin) == GPIO_PIN_SET){
 		return PIN_CHANGE_ALREADY_MATCH;
 	}
-	ENABLE_NRF905_STATUS_PIN_EXTI(unGPIO_Pin);
+	
 	__HAL_TIM_SET_COUNTER(&NRF905_COMM_TIMEOUT_HANDLER, 0);
 	__HAL_TIM_SET_AUTORELOAD(&NRF905_COMM_TIMEOUT_HANDLER, unWL_Timeout10Us);
+	ENABLE_NRF905_STATUS_PIN_EXTI(unGPIO_Pin);
 	HAL_TIM_Base_Start_IT(&NRF905_COMM_TIMEOUT_HANDLER);
 
 	xSemaphoreTake(WL_tNRF905SPI_CommCpltHandle, portMAX_DELAY);
+	
+	waitPinCleaning();
+	
 	if (HAL_GPIO_ReadPin(pGPIO_Port, unGPIO_Pin) == GPIO_PIN_SET){
 		return PIN_CHANGE_OK;
 	}else{
@@ -133,10 +153,11 @@ int32_t nRF905SendFrame(const uint8_t* pData, uint16_t unFrameLength)
 	setNRF905Mode(NRF905_MODE_STD_BY);
 	nRF905_SPI_WR(NRF905_CMD_WTP, pData, unFrameLength);
 	setNRF905Mode(NRF905_MODE_BURST_TX);
-	osDelay(5);
+//	osDelay(5);
 	if (WL_WaitPinRiseWithTimeout(NRF905_DR_GPIO_Port, NRF905_DR_Pin, NRF905_MAX_DR_WAIT_TIME) == PIN_CHANGE_TIMEOUT){
 		return (-1);
 	}
+	setNRF905Mode(NRF905_MODE_STD_BY);
 	return 0;
 }
 
@@ -173,7 +194,7 @@ static int32_t nRF905CR_Initial(void)
 
 int32_t nWirelessDataManager(uint8_t* pRxPayload, uint8_t unPayloadLength) 
 {
-	HAL_GPIO_TogglePin(GPIO_DEMO_LED_PORT, DEMO_LED_Pin);
+//	HAL_GPIO_TogglePin(GPIO_DEMO_LED_PORT, DEMO_LED_Pin);
 	return 0;
 }
 
@@ -202,8 +223,8 @@ void WL_startRFComm(void const * argument)
 	static uint8_t unHoppingTableIndex = 0;
 	uint8_t* pRxPayload;
 
-	DISABLE_NRF905_STATUS_PIN_EXTI;
-	CLEAR_NRF905_STATUS_PIN_EXTI_PENDING;
+	DISABLE_NRF905_DR_PIN_EXTI;
+	waitPinCleaning();
 	HAL_TIM_OnePulse_Init(&NRF905_COMM_TIMEOUT_HANDLER, TIM_OPMODE_SINGLE);
 	if (nRF905CR_Initial() < 0){
 		M_handleErr(NULL);
@@ -212,7 +233,7 @@ void WL_startRFComm(void const * argument)
 	for (;;){
 		switch(tNRF905State){
 		case NRF905_STATE_STDBY:		
-			tNRF905State = NRF905_STATE_CD;
+			tNRF905State = NRF905_STATE_DR;
 			break;
 
 		case NRF905_STATE_HOPPING:
@@ -224,42 +245,41 @@ void WL_startRFComm(void const * argument)
 			if (nRF905ChnPwrManager(unRF_HOPPING_TABLE[unHoppingTableIndex]) < 0){
 			 tNRF905State = NRF905_STATE_END;
 			}else{
-			 tNRF905State = NRF905_STATE_CD;
-			}
-			break;
-
-		case NRF905_STATE_CD:
-			setNRF905Mode(NRF905_MODE_BURST_RX);
-			if (WL_WaitPinRiseWithTimeout(NRF905_CD_GPIO_Port, NRF905_CD_Pin, NRF905_SAME_CHN_MAX_TIME) == PIN_CHANGE_TIMEOUT){
-				tNRF905State = NRF905_STATE_CD; //NRF905_STATE_HOPPING;
-			}else{
-				tNRF905State = NRF905_STATE_AM;
-			}				
-			break;
-
-		case NRF905_STATE_AM:
-			if (WL_WaitPinRiseWithTimeout(NRF905_AM_GPIO_Port, NRF905_AM_Pin, NRF905_MAX_AM_WAIT_TIME) == PIN_CHANGE_TIMEOUT){
-				tRemoteControlMap.unNRF905CommRecvFrameErr++;
-				tRemoteControlMap.unNRF905CommRecvFrameErrTotal++;
-				if (tRemoteControlMap.unNRF905CommRecvFrameErr > NRF905_MAX_COMM_ERR_BEFORE_HOPPING){
-					tNRF905State = NRF905_STATE_CD; //NRF905_STATE_HOPPING;
-				}else{
-					tNRF905State = NRF905_STATE_CD;				
-				}
-			}else{
+				tRemoteControlMap.unNRF905HoppingNumer++;
 				tNRF905State = NRF905_STATE_DR;
 			}
 			break;
+
+//		case NRF905_STATE_CD:
+//			setNRF905Mode(NRF905_MODE_BURST_RX);
+//			if (WL_WaitPinRiseWithTimeout(NRF905_CD_GPIO_Port, NRF905_CD_Pin, NRF905_SAME_CHN_MAX_TIME) == PIN_CHANGE_TIMEOUT){
+//				tNRF905State = NRF905_STATE_HOPPING;
+//			}else{
+//				tNRF905State = NRF905_STATE_AM;
+//			}				
+//			break;
+
+//		case NRF905_STATE_AM:
+//			if (WL_WaitPinRiseWithTimeout(NRF905_AM_GPIO_Port, NRF905_AM_Pin, NRF905_MAX_AM_WAIT_TIME) == PIN_CHANGE_TIMEOUT){
+//				tRemoteControlMap.unNRF905CommRecvFrameErr++;
+//				tRemoteControlMap.unNRF905CommRecvFrameErrTotal++;
+//				if (tRemoteControlMap.unNRF905CommRecvFrameErr > NRF905_MAX_COMM_ERR_BEFORE_HOPPING){
+//					tNRF905State = NRF905_STATE_HOPPING;
+//				}else{
+//					tNRF905State = NRF905_STATE_CD;				
+//				}
+//			}else{
+//				tNRF905State = NRF905_STATE_DR;
+//			}
+//			break;
 			
 		case NRF905_STATE_DR:
+			setNRF905Mode(NRF905_MODE_BURST_RX);
 			if (WL_WaitPinRiseWithTimeout(NRF905_DR_GPIO_Port, NRF905_DR_Pin, NRF905_MAX_DR_WAIT_TIME) == PIN_CHANGE_TIMEOUT){
 				tRemoteControlMap.unNRF905CommRecvFrameErr++;
 				tRemoteControlMap.unNRF905CommRecvFrameErrTotal++;
-				if (tRemoteControlMap.unNRF905CommRecvFrameErr > NRF905_MAX_COMM_ERR_BEFORE_HOPPING){
-					tNRF905State = NRF905_STATE_CD; //NRF905_STATE_HOPPING;
-				}else{
-					tNRF905State = NRF905_STATE_CD;				
-				}
+				tNRF905State = NRF905_STATE_DR;	//NRF905_STATE_HOPPING;
+				HAL_GPIO_TogglePin(GPIO_DEMO_LED_PORT, DEMO_LED_Pin);
 			}else{
 				// Read data from nRF905
 				pRxPayload = nRF905_SPI_RD(NRF905_CMD_RRP, NRF905_RX_PAYLOAD_LEN);
@@ -274,7 +294,7 @@ void WL_startRFComm(void const * argument)
 						if (nRF905SendFrame(pRxPayload + 1, NRF905_RX_PAYLOAD_LEN) < 0 ){
 							tNRF905State = NRF905_STATE_END;
 						}else{
-							tNRF905State = NRF905_STATE_CD;	
+							tNRF905State = NRF905_STATE_DR;	
 							tRemoteControlMap.unNRF905CommRecvFrameErr = 0;
 							tRemoteControlMap.unNRF905CommRecvFrameOK++;
 						}							

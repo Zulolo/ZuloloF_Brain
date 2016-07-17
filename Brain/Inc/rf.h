@@ -39,7 +39,7 @@
 	#define NRF905_SAME_CHN_MAX_TIME						30000		// 300ms, (30000*10us)
 	#define NRF905_MAX_CD_WAIT_TIME							NRF905_SAME_CHN_MAX_TIME	
 	#define NRF905_MAX_AM_WAIT_TIME							5000		// 50ms, (5000*10us)
-	#define NRF905_MAX_DR_WAIT_TIME							5000		// 50ms, (5000*10us)
+	#define NRF905_MAX_DR_WAIT_TIME							50000		// 300ms, (30000*10us)
 
 	#define AFTER_SET_BURST_TX_MAX_DELAY_US			5000
 	#define AFTER_SET_BURST_RX_MAX_CD_DELAY_US	10000
@@ -131,6 +131,7 @@ typedef struct _remoteControlMap {
 	uint32_t unNRF905CommRecvFrameErr;
 	uint32_t unNRF905CommRecvFrameErrTotal;
 	uint32_t unNRF905CommRecvFrameOK;
+	uint32_t unNRF905HoppingNumer;
 	uint32_t unNRF905ChNoAndPwr;
 	uint32_t unNRF905RX_Address;
 }RemoteControlMap_t;
