@@ -278,7 +278,7 @@ void WL_startRFComm(void const * argument)
 			if (WL_WaitPinRiseWithTimeout(NRF905_DR_GPIO_Port, NRF905_DR_Pin, NRF905_MAX_DR_WAIT_TIME) == PIN_CHANGE_TIMEOUT){
 				tRemoteControlMap.unNRF905CommRecvFrameErr++;
 				tRemoteControlMap.unNRF905CommRecvFrameErrTotal++;
-				tNRF905State = NRF905_STATE_DR;	//NRF905_STATE_HOPPING;
+				tNRF905State = NRF905_STATE_HOPPING;
 				HAL_GPIO_TogglePin(GPIO_DEMO_LED_PORT, DEMO_LED_Pin);
 			}else{
 				// Read data from nRF905
