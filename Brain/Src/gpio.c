@@ -83,6 +83,15 @@ void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_PULLDOWN;
   HAL_GPIO_Init(NRF905_DR_GPIO_Port, &GPIO_InitStruct);
 
+  /*Configure GPIO pins : PEPin PEPin PEPin PEPin 
+                           PEPin PEPin */
+  GPIO_InitStruct.Pin = NRF905_TX_EN_Pin|SPI1_MOTOR_SELECT_4_Pin|SPI1_MOTOR_SELECT_5_Pin|SPI1_MOTOR_SELECT_6_Pin 
+                          |SPI1_MOTOR_SELECT_7_Pin|SPI1_MOTOR_SELECT_8_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
+
   /*Configure GPIO pin : PtPin */
   GPIO_InitStruct.Pin = SPI1_W25X16_CS_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
@@ -110,15 +119,6 @@ void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(BOOT1_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : PEPin PEPin PEPin PEPin 
-                           PEPin PEPin */
-  GPIO_InitStruct.Pin = SPI1_MOTOR_SELECT_4_Pin|SPI1_MOTOR_SELECT_5_Pin|SPI1_MOTOR_SELECT_6_Pin|SPI1_MOTOR_SELECT_7_Pin 
-                          |SPI1_MOTOR_SELECT_8_Pin|NRF905_TX_EN_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
-
   /*Configure GPIO pins : PC8 PC9 PC10 PC11 
                            PC12 */
   GPIO_InitStruct.Pin = GPIO_PIN_8|GPIO_PIN_9|GPIO_PIN_10|GPIO_PIN_11 
@@ -145,6 +145,10 @@ void MX_GPIO_Init(void)
   HAL_GPIO_Init(NRF905_CS_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(GPIOE, NRF905_TX_EN_Pin|SPI1_MOTOR_SELECT_4_Pin|SPI1_MOTOR_SELECT_5_Pin|SPI1_MOTOR_SELECT_6_Pin 
+                          |SPI1_MOTOR_SELECT_7_Pin|SPI1_MOTOR_SELECT_8_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(SPI1_W25X16_CS_GPIO_Port, SPI1_W25X16_CS_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
@@ -152,10 +156,6 @@ void MX_GPIO_Init(void)
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOB, DEMO_LED_Pin|SPI1_MOTOR_SELECT_3_Pin|NRF905_PWR_UP_Pin|NRF905_TRX_CE_Pin, GPIO_PIN_RESET);
-
-  /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOE, SPI1_MOTOR_SELECT_4_Pin|SPI1_MOTOR_SELECT_5_Pin|SPI1_MOTOR_SELECT_6_Pin|SPI1_MOTOR_SELECT_7_Pin 
-                          |SPI1_MOTOR_SELECT_8_Pin|NRF905_TX_EN_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(NRF905_CS_GPIO_Port, NRF905_CS_Pin, GPIO_PIN_RESET);

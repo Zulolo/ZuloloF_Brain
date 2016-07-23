@@ -47,12 +47,13 @@ osThreadId myMotorCtrlTaskHandle;
 osThreadId myRoutineUpdateHandle;
 osThreadId myMotorCommTaskHandle;
 osThreadId myNRF905CommHandle;
+osThreadId myTmptHmdtMsmtHandle;
 osMessageQId MotorCommQueueHandle;
 osSemaphoreId MTR_tMotorSPI_CommCpltHandle;
 osSemaphoreId RTN_tNeedToUpdateMotorHandle;
 osSemaphoreId MTR_tMotorSpeedChangedHandle;
 osSemaphoreId WL_tNRF905SPI_CommCpltHandle;
-osSemaphoreId WL_tNRF905PinChangeHandleHandle;
+osSemaphoreId TH_tMeasureData_CommCpltHandle;
 osSemaphoreId tGlobalParaAccessHandle;
 
 /* USER CODE BEGIN Variables */
@@ -66,6 +67,7 @@ extern void MTR_ctrlMotor(void const * argument);
 extern void RTN_updateMotor(void const * argument);
 extern void MTR_MotorComm(void const * argument);
 extern void WL_startRFComm(void const * argument);
+extern void TH_Measure(void const * argument);
 
 extern void MX_FATFS_Init(void);
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
@@ -104,9 +106,9 @@ void MX_FREERTOS_Init(void) {
   osSemaphoreDef(WL_tNRF905SPI_CommCplt);
   WL_tNRF905SPI_CommCpltHandle = osSemaphoreCreate(osSemaphore(WL_tNRF905SPI_CommCplt), 1);
 
-  /* definition and creation of WL_tNRF905PinChangeHandle */
-  osSemaphoreDef(WL_tNRF905PinChangeHandle);
-  WL_tNRF905PinChangeHandleHandle = osSemaphoreCreate(osSemaphore(WL_tNRF905PinChangeHandle), 1);
+  /* definition and creation of TH_tMeasureData_CommCplt */
+  osSemaphoreDef(TH_tMeasureData_CommCplt);
+  TH_tMeasureData_CommCpltHandle = osSemaphoreCreate(osSemaphore(TH_tMeasureData_CommCplt), 1);
 
   /* definition and creation of tGlobalParaAccess */
   osSemaphoreDef(tGlobalParaAccess);
@@ -118,6 +120,13 @@ void MX_FREERTOS_Init(void) {
 	osSemaphoreWait(RTN_tNeedToUpdateMotorHandle, 5);
 	osSemaphoreWait(MTR_tMotorSpeedChangedHandle, 5);
 	osSemaphoreWait(WL_tNRF905SPI_CommCpltHandle, 5);
+	osSemaphoreWait(TH_tMeasureData_CommCpltHandle, 5);
+	
+	xSemaphoreTake(MTR_tMotorSPI_CommCpltHandle, 0);
+	xSemaphoreTake(RTN_tNeedToUpdateMotorHandle, 0);
+	xSemaphoreTake(MTR_tMotorSpeedChangedHandle, 0);
+	xSemaphoreTake(WL_tNRF905SPI_CommCpltHandle, 0);
+	xSemaphoreTake(TH_tMeasureData_CommCpltHandle, 0);
 
   /* USER CODE END RTOS_SEMAPHORES */
 
@@ -149,6 +158,10 @@ void MX_FREERTOS_Init(void) {
   /* definition and creation of myNRF905Comm */
   osThreadDef(myNRF905Comm, WL_startRFComm, osPriorityIdle, 0, 256);
   myNRF905CommHandle = osThreadCreate(osThread(myNRF905Comm), NULL);
+
+  /* definition and creation of myTmptHmdtMsmt */
+  osThreadDef(myTmptHmdtMsmt, TH_Measure, osPriorityIdle, 0, 256);
+  myTmptHmdtMsmtHandle = osThreadCreate(osThread(myTmptHmdtMsmt), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */

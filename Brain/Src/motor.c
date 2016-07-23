@@ -20,6 +20,7 @@
 
 extern osSemaphoreId MTR_tMotorSpeedChangedHandle;
 extern osSemaphoreId MTR_tMotorSPI_CommCpltHandle;
+extern osSemaphoreId RTN_tNeedToUpdateMotorHandle;
 extern osMessageQId MotorCommQueueHandle;
 
 //void MTR_giveMotorSpeedADC_Sem(struct __DMA_HandleTypeDef * hdma)
@@ -33,6 +34,21 @@ extern osMessageQId MotorCommQueueHandle;
 //  }
 //}
 	
+
+void RTN_updateMotor(void const * argument)
+{
+//	uint8_t unMotorIndex;
+	
+	HAL_ADC_Start_DMA(&MOTOR_SPEED_ADC_HANDLER, (uint32_t *)&unMotorSpeedADC_Buf, MOTOR_SPEED_ADC_DMA_DEPTH);
+	HAL_TIM_Base_Start(&ADC_ROUTINE_TIMER_HANDLER);
+	HAL_TIM_Base_Start_IT(&MOTOR_ROUTINE_TIMER_HANDLER);
+	for(;;)
+	{
+		xSemaphoreTake(RTN_tNeedToUpdateMotorHandle, portMAX_DELAY);
+		MTR_unReadMotorStatus(MOTOR_NUMBER);
+	}
+}
+
 uint16_t calCRC16(uint8_t* pBytes, uint32_t unLength)
 {
 	uint16_t crc = 0;
@@ -327,6 +343,7 @@ void MTR_MotorComm(void const * argument)
 	static MOTOR_SPI_COMM_T tMotorComm = MTR_DUMMY_CMD_CONTENT;
 
 	DESELECT_ALL_MOTOR;
+
 	// Since although set SPI as Mode 0 (CLK Polarity is Low), the start status of CLK pin may be high
 	// Send one any/dummy data to no one (NOT selecting any motor) to reset CLK pin
 	if(HAL_SPI_Transmit(&MOTOR_COMM_SPI_HANDLER, (uint8_t *)CRC_TABLE16, 1, 10) != HAL_OK)

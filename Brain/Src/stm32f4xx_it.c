@@ -41,6 +41,7 @@
 #include "rf.h"
 extern osSemaphoreId RTN_tNeedToUpdateMotorHandle;
 extern osSemaphoreId WL_tNRF905SPI_CommCpltHandle;
+extern osSemaphoreId TH_tMeasureData_CommCpltHandle;
 /* USER CODE END 0 */
 
 /* External variables --------------------------------------------------------*/
@@ -48,6 +49,7 @@ extern DMA_HandleTypeDef hdma_adc3;
 extern DMA_HandleTypeDef hdma_spi3_rx;
 extern DMA_HandleTypeDef hdma_spi3_tx;
 extern SPI_HandleTypeDef hspi1;
+extern DMA_HandleTypeDef hdma_tim3_ch1_trig;
 extern TIM_HandleTypeDef htim6;
 extern TIM_HandleTypeDef htim13;
 extern PCD_HandleTypeDef hpcd_USB_OTG_FS;
@@ -199,6 +201,39 @@ void DMA1_Stream0_IRQHandler(void)
   /* USER CODE BEGIN DMA1_Stream0_IRQn 1 */
 
   /* USER CODE END DMA1_Stream0_IRQn 1 */
+}
+
+/**
+* @brief This function handles DMA1 stream2 global interrupt.
+*/
+void DMA1_Stream2_IRQHandler(void)
+{
+  /* USER CODE BEGIN DMA1_Stream2_IRQn 0 */
+
+  /* USER CODE END DMA1_Stream2_IRQn 0 */
+  
+  /* USER CODE BEGIN DMA1_Stream2_IRQn 1 */
+
+  /* USER CODE END DMA1_Stream2_IRQn 1 */
+}
+
+/**
+* @brief This function handles DMA1 stream4 global interrupt.
+*/
+void DMA1_Stream4_IRQHandler(void)
+{
+  /* USER CODE BEGIN DMA1_Stream4_IRQn 0 */
+	static portBASE_TYPE tHigherPriorityTaskWoken;
+  /* USER CODE END DMA1_Stream4_IRQn 0 */
+  HAL_DMA_IRQHandler(&hdma_tim3_ch1_trig);
+  /* USER CODE BEGIN DMA1_Stream4_IRQn 1 */
+	tHigherPriorityTaskWoken = pdFALSE;
+	xSemaphoreGiveFromISR(TH_tMeasureData_CommCpltHandle, &tHigherPriorityTaskWoken);
+	if(tHigherPriorityTaskWoken == pdTRUE)
+	{
+		portEND_SWITCHING_ISR(tHigherPriorityTaskWoken);
+	}
+  /* USER CODE END DMA1_Stream4_IRQn 1 */
 }
 
 /**

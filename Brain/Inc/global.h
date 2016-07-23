@@ -10,11 +10,13 @@
 #define MOTOR_COMM_SPI_HANDLER					hspi1
 #define NRF905_COMM_SPI_HANDLER					hspi3
 #define ADC_ROUTINE_TIMER_HANDLER				htim2
+#define TH_RCV_DATA_TIMER_HANDLER				htim3
 #define MOTOR_ROUTINE_TIMER_HANDLER			htim6
 #define NRF905_COMM_TIMEOUT_HANDLER			htim13		// 10us per CNT
 #define ADC_12BIT_MASK				  				0x0FFF
 #define MOTOR_NUMBER										4
 #define BIT_MASK												0x00000001
+#define BIT_NUM_PER_BYTE								8
 
 typedef struct
 {
