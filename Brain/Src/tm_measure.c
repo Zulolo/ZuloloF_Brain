@@ -18,8 +18,6 @@
 																											*((pArray) + (unIndex)/BIT_NUM_PER_BYTE) | (0x01 << (BIT_NUM_PER_BYTE - 1 - (unIndex)%BIT_NUM_PER_BYTE)))
 extern osSemaphoreId TH_tMeasureData_CommCpltHandle;
 
-uint8_t unMeasureRslt[AM2301_MEASUREMENT_BYTE_NUM];
-
 int32_t sendStartTrigger(void){
 	GPIO_InitTypeDef GPIO_InitStruct;
 	GPIO_InitStruct.Pin = AM2301_DATA_Pin;
@@ -78,6 +76,7 @@ uint8_t* handleTH_Data(uint16_t* pRawData){
 }
 
 int32_t measureTH(void){
+	uint8_t* pTH_Data;
 	static uint32_t tempMeasureRslt[(MAX_TH_MEASURE_BIT_NUM + 2) >> 1];
 	
 	if (sendStartTrigger() < 0){
@@ -91,11 +90,18 @@ int32_t measureTH(void){
 	if (startRecv(tempMeasureRslt) < 0){
 		return (-1);
 	}
-		
-	if (handleTH_Data((uint16_t*)tempMeasureRslt) == NULL){
+	pTH_Data = handleTH_Data((uint16_t*)tempMeasureRslt);
+	if (NULL == pTH_Data){
 		return (-1);
 	}else{
-		memcpy(unMeasureRslt, tempMeasureRslt, AM2301_MEASUREMENT_BYTE_NUM);
+		IS_GLOBAL_PARA_WRITABLE;
+		tSensoreData.unHumidity = (((uint16_t)(*pTH_Data)) << BIT_NUM_PER_BYTE) + *(pTH_Data + 1);
+		if ((*(pTH_Data + 2) & 0x80) == 0x80){
+			tSensoreData.nTemperature = 1 - (int16_t)((((uint16_t)(*(pTH_Data + 2) & 0x7F)) << BIT_NUM_PER_BYTE) + *(pTH_Data + 3));
+		}else{
+			tSensoreData.nTemperature = (((uint16_t)(*(pTH_Data + 2) & 0x7F)) << BIT_NUM_PER_BYTE) + *(pTH_Data + 3);
+		}
+		RELEASE_GLOBAL_PARA_WRITE_ACCESS;
 		return 0;		
 	}
 }

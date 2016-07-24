@@ -3,7 +3,7 @@
 <title>Static Call Graph - [Brain\Brain.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image Brain\Brain.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060061: Last Updated: Sat Jul 23 18:45:27 2016
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060061: Last Updated: Sun Jul 24 11:21:51 2016
 <BR><P>
 <H3>Maximum Stack Usage =        360 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -33,7 +33,7 @@ Function Pointers
  <LI><a href="#[5d]">DCMI_IRQHandler</a> from startup_stm32f407xx.o(.text) referenced from startup_stm32f407xx.o(RESET)
  <LI><a href="#[1a]">DMA1_Stream0_IRQHandler</a> from stm32f4xx_it.o(i.DMA1_Stream0_IRQHandler) referenced from startup_stm32f407xx.o(RESET)
  <LI><a href="#[1b]">DMA1_Stream1_IRQHandler</a> from startup_stm32f407xx.o(.text) referenced from startup_stm32f407xx.o(RESET)
- <LI><a href="#[1c]">DMA1_Stream2_IRQHandler</a> from stm32f4xx_it.o(i.DMA1_Stream2_IRQHandler) referenced from startup_stm32f407xx.o(RESET)
+ <LI><a href="#[1c]">DMA1_Stream2_IRQHandler</a> from startup_stm32f407xx.o(.text) referenced from startup_stm32f407xx.o(RESET)
  <LI><a href="#[1d]">DMA1_Stream3_IRQHandler</a> from startup_stm32f407xx.o(.text) referenced from startup_stm32f407xx.o(RESET)
  <LI><a href="#[1e]">DMA1_Stream4_IRQHandler</a> from stm32f4xx_it.o(i.DMA1_Stream4_IRQHandler) referenced from startup_stm32f407xx.o(RESET)
  <LI><a href="#[1f]">DMA1_Stream5_IRQHandler</a> from stm32f4xx_it.o(i.DMA1_Stream5_IRQHandler) referenced from startup_stm32f407xx.o(RESET)
@@ -230,6 +230,9 @@ Global Symbols
 <BR>[Address Reference Count : 1]<UL><LI> startup_stm32f407xx.o(RESET)
 </UL>
 <P><STRONG><a name="[1b]"></a>DMA1_Stream1_IRQHandler</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, startup_stm32f407xx.o(.text))
+<BR>[Address Reference Count : 1]<UL><LI> startup_stm32f407xx.o(RESET)
+</UL>
+<P><STRONG><a name="[1c]"></a>DMA1_Stream2_IRQHandler</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, startup_stm32f407xx.o(.text))
 <BR>[Address Reference Count : 1]<UL><LI> startup_stm32f407xx.o(RESET)
 </UL>
 <P><STRONG><a name="[1d]"></a>DMA1_Stream3_IRQHandler</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, startup_stm32f407xx.o(.text))
@@ -470,9 +473,6 @@ Global Symbols
 </UL>
 <BR>[Calls]<UL><LI><a href="#[88]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_DMA_IRQHandler
 </UL>
-<BR>[Address Reference Count : 1]<UL><LI> startup_stm32f407xx.o(RESET)
-</UL>
-<P><STRONG><a name="[1c]"></a>DMA1_Stream2_IRQHandler</STRONG> (Thumb, 2 bytes, Stack size 0 bytes, stm32f4xx_it.o(i.DMA1_Stream2_IRQHandler))
 <BR>[Address Reference Count : 1]<UL><LI> startup_stm32f407xx.o(RESET)
 </UL>
 <P><STRONG><a name="[1e]"></a>DMA1_Stream4_IRQHandler</STRONG> (Thumb, 54 bytes, Stack size 8 bytes, stm32f4xx_it.o(i.DMA1_Stream4_IRQHandler))
@@ -1129,9 +1129,9 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[aa]"></a>HAL_TIM_Base_Start_IT</STRONG> (Thumb, 30 bytes, Stack size 0 bytes, stm32f4xx_hal_tim.o(i.HAL_TIM_Base_Start_IT))
-<BR><BR>[Called By]<UL><LI><a href="#[13a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;WL_WaitPinRiseWithTimeout
-<LI><a href="#[7a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;RTN_updateMotor
+<BR><BR>[Called By]<UL><LI><a href="#[7a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;RTN_updateMotor
 <LI><a href="#[a3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_InitTick
+<LI><a href="#[13a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;WL_WaitPinRiseWithTimeout
 </UL>
 
 <P><STRONG><a name="[135]"></a>HAL_TIM_Base_Stop_IT</STRONG> (Thumb, 56 bytes, Stack size 0 bytes, stm32f4xx_hal_tim.o(i.HAL_TIM_Base_Stop_IT))
@@ -1350,7 +1350,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[60]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[110]"></a>MX_DMA_Init</STRONG> (Thumb, 146 bytes, Stack size 8 bytes, dma.o(i.MX_DMA_Init))
+<P><STRONG><a name="[110]"></a>MX_DMA_Init</STRONG> (Thumb, 130 bytes, Stack size 8 bytes, dma.o(i.MX_DMA_Init))
 <BR><BR>[Stack]<UL><LI>Max Depth = 56<LI>Call Chain = MX_DMA_Init &rArr; HAL_NVIC_SetPriority &rArr; NVIC_SetPriority
 </UL>
 <BR>[Calls]<UL><LI><a href="#[a5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_NVIC_SetPriority
@@ -1367,10 +1367,11 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[77]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;StartDefaultTask
 </UL>
 
-<P><STRONG><a name="[112]"></a>MX_FREERTOS_Init</STRONG> (Thumb, 412 bytes, Stack size 176 bytes, freertos.o(i.MX_FREERTOS_Init))
+<P><STRONG><a name="[112]"></a>MX_FREERTOS_Init</STRONG> (Thumb, 552 bytes, Stack size 176 bytes, freertos.o(i.MX_FREERTOS_Init))
 <BR><BR>[Stack]<UL><LI>Max Depth = 360<LI>Call Chain = MX_FREERTOS_Init &rArr; osThreadCreate &rArr; xTaskGenericCreate &rArr; prvAllocateTCBAndStack &rArr; pvPortMalloc &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
 </UL>
-<BR>[Calls]<UL><LI><a href="#[102]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xQueueGenericReceive
+<BR>[Calls]<UL><LI><a href="#[10a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xQueueGenericSend
+<LI><a href="#[102]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xQueueGenericReceive
 <LI><a href="#[114]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osSemaphoreWait
 <LI><a href="#[113]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osSemaphoreCreate
 <LI><a href="#[115]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osThreadCreate
@@ -1811,10 +1812,9 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[7c]"></a>WL_startRFComm</STRONG> (Thumb, 294 bytes, Stack size 0 bytes, rf.o(i.WL_startRFComm))
-<BR><BR>[Stack]<UL><LI>Max Depth = 128<LI>Call Chain = WL_startRFComm &rArr; nRF905SendFrame &rArr; WL_WaitPinRiseWithTimeout &rArr; xQueueGenericReceive &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
+<BR><BR>[Stack]<UL><LI>Max Depth = 128<LI>Call Chain = WL_startRFComm &rArr; nRF905SendFrame &rArr; nRF905_SPI_WR &rArr; xQueueGenericReceive &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
 </UL>
 <BR>[Calls]<UL><LI><a href="#[13d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vTaskSuspend
-<LI><a href="#[13a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;WL_WaitPinRiseWithTimeout
 <LI><a href="#[13c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;nRF905CR_Initial
 <LI><a href="#[100]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;M_handleErr
 <LI><a href="#[f9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_TIM_OnePulse_Init
@@ -1825,6 +1825,7 @@ Global Symbols
 <LI><a href="#[141]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;nRF905_SPI_RD
 <LI><a href="#[143]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;nRF905SendFrame
 <LI><a href="#[13e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;nRF905ChnPwrManager
+<LI><a href="#[13a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;WL_WaitPinRiseWithTimeout
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> freertos.o(.constdata)
 </UL>
@@ -1903,10 +1904,12 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> entry9a.o(.ARM.Collect$$$$0000000B)
 </UL>
-<P><STRONG><a name="[134]"></a>measureTH</STRONG> (Thumb, 76 bytes, Stack size 8 bytes, tm_measure.o(i.measureTH))
+<P><STRONG><a name="[134]"></a>measureTH</STRONG> (Thumb, 272 bytes, Stack size 8 bytes, tm_measure.o(i.measureTH))
 <BR><BR>[Stack]<UL><LI>Max Depth = 112<LI>Call Chain = measureTH &rArr; startRecv &rArr; xQueueGenericReceive &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
 </UL>
-<BR>[Calls]<UL><LI><a href="#[149]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;waitTH_Response
+<BR>[Calls]<UL><LI><a href="#[10a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xQueueGenericSend
+<LI><a href="#[102]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xQueueGenericReceive
+<LI><a href="#[149]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;waitTH_Response
 <LI><a href="#[14a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;startRecv
 <LI><a href="#[148]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;sendStartTrigger
 <LI><a href="#[14b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;handleTH_Data
@@ -1924,11 +1927,11 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[143]"></a>nRF905SendFrame</STRONG> (Thumb, 70 bytes, Stack size 16 bytes, rf.o(i.nRF905SendFrame))
-<BR><BR>[Stack]<UL><LI>Max Depth = 128<LI>Call Chain = nRF905SendFrame &rArr; WL_WaitPinRiseWithTimeout &rArr; xQueueGenericReceive &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
+<BR><BR>[Stack]<UL><LI>Max Depth = 128<LI>Call Chain = nRF905SendFrame &rArr; nRF905_SPI_WR &rArr; xQueueGenericReceive &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
 </UL>
-<BR>[Calls]<UL><LI><a href="#[13a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;WL_WaitPinRiseWithTimeout
-<LI><a href="#[13f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;setNRF905Mode
+<BR>[Calls]<UL><LI><a href="#[13f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;setNRF905Mode
 <LI><a href="#[14c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;nRF905_SPI_WR
+<LI><a href="#[13a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;WL_WaitPinRiseWithTimeout
 </UL>
 <BR>[Called By]<UL><LI><a href="#[7c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;WL_startRFComm
 </UL>
@@ -2288,9 +2291,9 @@ Global Symbols
 </UL>
 <BR>[Calls]<UL><LI><a href="#[135]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_TIM_Base_Stop_IT
 </UL>
-<BR>[Called By]<UL><LI><a href="#[13a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;WL_WaitPinRiseWithTimeout
+<BR>[Called By]<UL><LI><a href="#[7c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;WL_startRFComm
+<LI><a href="#[13a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;WL_WaitPinRiseWithTimeout
 <LI><a href="#[9a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_GPIO_EXTI_Callback
-<LI><a href="#[7c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;WL_startRFComm
 </UL>
 
 <P><STRONG><a name="[149]"></a>waitTH_Response</STRONG> (Thumb, 46 bytes, Stack size 24 bytes, tm_measure.o(i.waitTH_Response))
@@ -2372,7 +2375,6 @@ Global Symbols
 <LI><a href="#[162]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortEnterCritical
 </UL>
 <BR>[Called By]<UL><LI><a href="#[114]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osSemaphoreWait
-<LI><a href="#[13a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;WL_WaitPinRiseWithTimeout
 <LI><a href="#[13c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;nRF905CR_Initial
 <LI><a href="#[104]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;writeToMotor
 <LI><a href="#[103]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;readFromMotor
@@ -2381,8 +2383,10 @@ Global Symbols
 <LI><a href="#[7b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MTR_MotorComm
 <LI><a href="#[112]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MX_FREERTOS_Init
 <LI><a href="#[14a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;startRecv
+<LI><a href="#[134]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;measureTH
 <LI><a href="#[14c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;nRF905_SPI_WR
 <LI><a href="#[141]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;nRF905_SPI_RD
+<LI><a href="#[13a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;WL_WaitPinRiseWithTimeout
 </UL>
 
 <P><STRONG><a name="[181]"></a>xQueueGenericReset</STRONG> (Thumb, 144 bytes, Stack size 16 bytes, queue.o(i.xQueueGenericReset))
@@ -2414,6 +2418,8 @@ Global Symbols
 </UL>
 <BR>[Called By]<UL><LI><a href="#[113]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osSemaphoreCreate
 <LI><a href="#[109]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MTR_unReadMotorStatus
+<LI><a href="#[112]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MX_FREERTOS_Init
+<LI><a href="#[134]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;measureTH
 </UL>
 
 <P><STRONG><a name="[89]"></a>xQueueGiveFromISR</STRONG> (Thumb, 214 bytes, Stack size 24 bytes, queue.o(i.xQueueGiveFromISR))
@@ -2422,8 +2428,7 @@ Global Symbols
 <BR>[Calls]<UL><LI><a href="#[170]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskRemoveFromEventList
 <LI><a href="#[176]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortValidateInterruptPriority
 </UL>
-<BR>[Called By]<UL><LI><a href="#[9a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_GPIO_EXTI_Callback
-<LI><a href="#[85]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_ADC_ConvCpltCallback
+<BR>[Called By]<UL><LI><a href="#[85]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_ADC_ConvCpltCallback
 <LI><a href="#[3b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TIM8_UP_TIM13_IRQHandler
 <LI><a href="#[45]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TIM6_DAC_IRQHandler
 <LI><a href="#[1e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;DMA1_Stream4_IRQHandler
@@ -2431,6 +2436,7 @@ Global Symbols
 <LI><a href="#[dd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_SPI_TxCpltCallback
 <LI><a href="#[d8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_SPI_RxCpltCallback
 <LI><a href="#[d3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_SPI_ErrorCallback
+<LI><a href="#[9a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_GPIO_EXTI_Callback
 </UL>
 
 <P><STRONG><a name="[155]"></a>xQueueReceiveFromISR</STRONG> (Thumb, 188 bytes, Stack size 32 bytes, queue.o(i.xQueueReceiveFromISR))

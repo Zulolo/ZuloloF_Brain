@@ -241,29 +241,6 @@ void WL_startRFComm(void const * argument)
 				tNRF905State = NRF905_STATE_DR;
 			}
 			break;
-
-//		case NRF905_STATE_CD:
-//			setNRF905Mode(NRF905_MODE_BURST_RX);
-//			if (WL_WaitPinRiseWithTimeout(NRF905_CD_GPIO_Port, NRF905_CD_Pin, NRF905_SAME_CHN_MAX_TIME) == PIN_CHANGE_TIMEOUT){
-//				tNRF905State = NRF905_STATE_HOPPING;
-//			}else{
-//				tNRF905State = NRF905_STATE_AM;
-//			}				
-//			break;
-
-//		case NRF905_STATE_AM:
-//			if (WL_WaitPinRiseWithTimeout(NRF905_AM_GPIO_Port, NRF905_AM_Pin, NRF905_MAX_AM_WAIT_TIME) == PIN_CHANGE_TIMEOUT){
-//				tRemoteControlMap.unNRF905CommRecvFrameErr++;
-//				tRemoteControlMap.unNRF905CommRecvFrameErrTotal++;
-//				if (tRemoteControlMap.unNRF905CommRecvFrameErr > NRF905_MAX_COMM_ERR_BEFORE_HOPPING){
-//					tNRF905State = NRF905_STATE_HOPPING;
-//				}else{
-//					tNRF905State = NRF905_STATE_CD;				
-//				}
-//			}else{
-//				tNRF905State = NRF905_STATE_DR;
-//			}
-//			break;
 			
 		case NRF905_STATE_DR:
 			setNRF905Mode(NRF905_MODE_BURST_RX);

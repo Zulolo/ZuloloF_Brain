@@ -112,7 +112,7 @@ void MX_FREERTOS_Init(void) {
 
   /* definition and creation of tGlobalParaAccess */
   osSemaphoreDef(tGlobalParaAccess);
-  tGlobalParaAccessHandle = osSemaphoreCreate(osSemaphore(tGlobalParaAccess), 10);
+  tGlobalParaAccessHandle = osSemaphoreCreate(osSemaphore(tGlobalParaAccess), 6);
 
   /* USER CODE BEGIN RTOS_SEMAPHORES */
   /* add semaphores, ... */
@@ -127,6 +127,18 @@ void MX_FREERTOS_Init(void) {
 	xSemaphoreTake(MTR_tMotorSpeedChangedHandle, 0);
 	xSemaphoreTake(WL_tNRF905SPI_CommCpltHandle, 0);
 	xSemaphoreTake(TH_tMeasureData_CommCpltHandle, 0);
+	
+	xSemaphoreTake(tGlobalParaAccessHandle, 0);
+	xSemaphoreTake(tGlobalParaAccessHandle, 0);
+	xSemaphoreTake(tGlobalParaAccessHandle, 0);
+	xSemaphoreTake(tGlobalParaAccessHandle, 0);
+	xSemaphoreTake(tGlobalParaAccessHandle, 0);
+	
+	xSemaphoreGive(tGlobalParaAccessHandle);
+	xSemaphoreGive(tGlobalParaAccessHandle);
+	xSemaphoreGive(tGlobalParaAccessHandle);
+	xSemaphoreGive(tGlobalParaAccessHandle);
+	xSemaphoreGive(tGlobalParaAccessHandle);
 
   /* USER CODE END RTOS_SEMAPHORES */
 
