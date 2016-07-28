@@ -49,7 +49,6 @@
 
 /* USER CODE BEGIN Includes */
 #define __USED_BY_MAIN__
-#include "global.h"
 #include "motor.h"
 #include "main.h"
 /* USER CODE END Includes */
@@ -60,6 +59,7 @@
 /* Private variables ---------------------------------------------------------*/
 extern osSemaphoreId MTR_tMotorSPI_CommCpltHandle;
 extern osSemaphoreId WL_tNRF905SPI_CommCpltHandle;
+extern osSemaphoreId MTR_tMotorSpeedChangedHandle;
 
 /* USER CODE END PV */
 
@@ -149,6 +149,7 @@ int main(void)
   MX_USB_OTG_FS_PCD_Init();
   MX_RNG_Init();
   MX_TIM3_Init();
+  MX_TIM12_Init();
 
   /* USER CODE BEGIN 2 */
   tErrorStatus = SUCCESS;
@@ -299,6 +300,21 @@ void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef *hspi)
 		{
 			portEND_SWITCHING_ISR(tHigherPriorityTaskWoken);
 		}
+	}
+}
+
+void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc)
+{
+	static portBASE_TYPE tHigherPriorityTaskWoken;
+	if (hadc->Instance == MOTOR_SPEED_ADC_HANDLER.Instance){
+		tHigherPriorityTaskWoken = pdFALSE;
+		xSemaphoreGiveFromISR(MTR_tMotorSpeedChangedHandle, &tHigherPriorityTaskWoken);
+		if(tHigherPriorityTaskWoken == pdTRUE){
+			portEND_SWITCHING_ISR(tHigherPriorityTaskWoken);
+		}		
+	}else if (hadc->Instance == AIR_QUALITY_ADC_HANDLER.Instance) {
+		HAL_GPIO_WritePin(AIR_QLT_LED_ENABLE_GPIO_Port, AIR_QLT_LED_ENABLE_Pin, GPIO_PIN_SET);
+		tSensoreData.unAirQuality = HAL_ADC_GetValue(&AIR_QUALITY_ADC_HANDLER);
 	}
 }
 

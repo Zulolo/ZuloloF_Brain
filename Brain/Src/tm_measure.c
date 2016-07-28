@@ -6,7 +6,6 @@
 #include "string.h"
 
 #define __USED_BY_TM__
-#include "global.h"
 #include "tm_measure.h"
 #include "main.h"
 

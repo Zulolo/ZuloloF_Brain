@@ -2,6 +2,8 @@
 #ifndef __MOTOR_H
 #define __MOTOR_H
 
+#include "stm32f4xx.h"
+#include "global.h"
 
 #define MTR_SPD_CHNG_SEM_MAX		10
 #define MAX_MOTOR_COMM_LENGTH		3

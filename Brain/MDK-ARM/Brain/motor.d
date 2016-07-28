@@ -77,6 +77,6 @@ brain\motor.o: ../Inc/spi.h
 brain\motor.o: ../Inc/tim.h
 brain\motor.o: ../Inc/usart.h
 brain\motor.o: ../Inc/gpio.h
-brain\motor.o: ../Inc/global.h
 brain\motor.o: ../Inc/motor.h
+brain\motor.o: ../Inc/global.h
 brain\motor.o: ../Inc/main.h

@@ -14,7 +14,6 @@
 #include "gpio.h"
 
 #define __USED_BY_MOTOR__
-#include "global.h"
 #include "motor.h"
 #include "main.h"
 
@@ -82,20 +81,6 @@ void deselectMotor(uint8_t unMotorIndex)
 	}
 }
 	
-void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc)
-{
-	static portBASE_TYPE tHigherPriorityTaskWoken;
-	if (hadc->Instance == MOTOR_SPEED_ADC_HANDLER.Instance)
-	{
-		tHigherPriorityTaskWoken = pdFALSE;
-		xSemaphoreGiveFromISR(MTR_tMotorSpeedChangedHandle, &tHigherPriorityTaskWoken);
-		if(tHigherPriorityTaskWoken == pdTRUE)
-		{
-			portEND_SWITCHING_ISR(tHigherPriorityTaskWoken);
-		}		
-	}
-}
-
 uint16_t MTR_calculateMotorSpeedADC(void)
 {
 	uint8_t unIndex;

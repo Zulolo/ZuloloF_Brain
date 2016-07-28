@@ -48,6 +48,7 @@ osThreadId myRoutineUpdateHandle;
 osThreadId myMotorCommTaskHandle;
 osThreadId myNRF905CommHandle;
 osThreadId myTmptHmdtMsmtHandle;
+osThreadId myAirQualityHandle;
 osMessageQId MotorCommQueueHandle;
 osSemaphoreId MTR_tMotorSPI_CommCpltHandle;
 osSemaphoreId RTN_tNeedToUpdateMotorHandle;
@@ -68,6 +69,7 @@ extern void RTN_updateMotor(void const * argument);
 extern void MTR_MotorComm(void const * argument);
 extern void WL_startRFComm(void const * argument);
 extern void TH_Measure(void const * argument);
+extern void AQ_Measure(void const * argument);
 
 extern void MX_FATFS_Init(void);
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
@@ -174,6 +176,10 @@ void MX_FREERTOS_Init(void) {
   /* definition and creation of myTmptHmdtMsmt */
   osThreadDef(myTmptHmdtMsmt, TH_Measure, osPriorityIdle, 0, 256);
   myTmptHmdtMsmtHandle = osThreadCreate(osThread(myTmptHmdtMsmt), NULL);
+
+  /* definition and creation of myAirQuality */
+  osThreadDef(myAirQuality, AQ_Measure, osPriorityIdle, 0, 256);
+  myAirQualityHandle = osThreadCreate(osThread(myAirQuality), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */

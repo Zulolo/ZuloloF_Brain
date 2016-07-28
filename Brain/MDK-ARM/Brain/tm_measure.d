@@ -61,6 +61,6 @@ brain\tm_measure.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/event_gro
 brain\tm_measure.o: ../Inc/tim.h
 brain\tm_measure.o: ../Inc/gpio.h
 brain\tm_measure.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
-brain\tm_measure.o: ../Inc/global.h
 brain\tm_measure.o: ../Inc/tm_measure.h
+brain\tm_measure.o: ../Inc/global.h
 brain\tm_measure.o: ../Inc/main.h

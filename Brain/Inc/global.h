@@ -7,11 +7,13 @@
 #define GPIO_DEMO_LED_PORT 								GPIOB
 #define MOTOR_SPEED_ADC				  					ADC3
 #define MOTOR_SPEED_ADC_HANDLER						hadc3
+#define AIR_QUALITY_ADC_HANDLER						hadc2
 #define MOTOR_COMM_SPI_HANDLER						hspi1
 #define NRF905_COMM_SPI_HANDLER						hspi3
 #define ADC_ROUTINE_TIMER_HANDLER					htim2
 #define TH_RCV_DATA_TIMER_HANDLER					htim3
 #define MOTOR_ROUTINE_TIMER_HANDLER				htim6
+#define AIR_QUALITY_MSR_DELAY_HANDLER			htim12		// 280us
 #define NRF905_COMM_TIMEOUT_HANDLER				htim13		// 10us per CNT
 #define ADC_12BIT_MASK				  					0x0FFF
 #define MOTOR_NUMBER											4
@@ -77,6 +79,21 @@ typedef struct
 	__IO uint16_t  unMotorIndex;
 	__IO uint16_t  unPayLoad[3];
 } MOTOR_SPI_COMM_T;
+
+typedef struct
+{
+	struct
+	{
+		__IO uint16_t unNULL:16;
+	}SCR;												// sensor control bits
+	struct
+	{
+		__IO uint16_t unNULL:16;
+	}SSR;												// sensor status bits
+	uint16_t	unHumidity;				// Need to divided by 10 to get real one
+	int16_t		nTemperature;			// Need to divided by 10 to get real one
+	uint16_t	unAirQuality;			// 
+} SENSOR_DATA_T;
 
 typedef enum
 {

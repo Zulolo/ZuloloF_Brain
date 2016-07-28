@@ -79,6 +79,6 @@ brain\main.o: ../Inc/tim.h
 brain\main.o: ../Inc/usart.h
 brain\main.o: ../Inc/usb_otg.h
 brain\main.o: ../Inc/gpio.h
-brain\main.o: ../Inc/global.h
 brain\main.o: ../Inc/motor.h
+brain\main.o: ../Inc/global.h
 brain\main.o: ../Inc/main.h
