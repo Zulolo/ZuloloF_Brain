@@ -136,5 +136,11 @@ typedef struct _remoteControlMap {
 	uint32_t unNRF905RX_Address;
 }RemoteControlMap_t;
 
+typedef enum _RF_CMD {
+	RF_READ_SENSOR_VALUE = 0,
+	RF_WRITE_MOTOR_PAR,
+	RF_CMD_FAILED
+}RF_Command_t;
+
 __EXTERN_RF__ RemoteControlMap_t tRemoteControlMap;
 #endif

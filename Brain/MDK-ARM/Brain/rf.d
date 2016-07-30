@@ -64,4 +64,5 @@ brain\rf.o: ../Inc/gpio.h
 brain\rf.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
 brain\rf.o: ../Inc/global.h
 brain\rf.o: ../Inc/rf.h
+brain\rf.o: ../Inc/motor.h
 brain\rf.o: ../Inc/main.h

@@ -3,7 +3,7 @@
 <title>Static Call Graph - [Brain\Brain.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image Brain\Brain.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060061: Last Updated: Sat Jul 30 12:53:53 2016
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060061: Last Updated: Sat Jul 30 18:16:50 2016
 <BR><P>
 <H3>Maximum Stack Usage =        384 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -479,7 +479,7 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> freertos.o(.constdata)
 </UL>
-<P><STRONG><a name="[8e]"></a>AQ_nDataManager</STRONG> (Thumb, 94 bytes, Stack size 16 bytes, air_quality.o(i.AQ_nDataManager))
+<P><STRONG><a name="[8e]"></a>AQ_nDataManager</STRONG> (Thumb, 82 bytes, Stack size 16 bytes, air_quality.o(i.AQ_nDataManager))
 <BR><BR>[Stack]<UL><LI>Max Depth = 112<LI>Call Chain = AQ_nDataManager &rArr; xQueueGenericSend &rArr; prvCopyDataToQueue &rArr; xTaskPriorityDisinherit
 </UL>
 <BR>[Calls]<UL><LI><a href="#[91]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xQueueGenericSend
@@ -1917,7 +1917,7 @@ Global Symbols
 <LI><a href="#[14a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_GPIO_TogglePin
 <LI><a href="#[aa]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;waitPinCleaning
 <LI><a href="#[149]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;setNRF905Mode
-<LI><a href="#[14c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;nWirelessDataManager
+<LI><a href="#[14c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;pWirelessDataManager
 <LI><a href="#[14b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;nRF905_SPI_RD
 <LI><a href="#[14d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;nRF905SendFrame
 <LI><a href="#[148]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;nRF905ChnPwrManager
@@ -2059,10 +2059,6 @@ Global Symbols
 <LI><a href="#[148]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;nRF905ChnPwrManager
 </UL>
 
-<P><STRONG><a name="[14c]"></a>nWirelessDataManager</STRONG> (Thumb, 6 bytes, Stack size 0 bytes, rf.o(i.nWirelessDataManager))
-<BR><BR>[Called By]<UL><LI><a href="#[7c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;WL_startRFComm
-</UL>
-
 <P><STRONG><a name="[8f]"></a>osDelay</STRONG> (Thumb, 24 bytes, Stack size 16 bytes, cmsis_os.o(i.osDelay))
 <BR><BR>[Stack]<UL><LI>Max Depth = 72<LI>Call Chain = osDelay &rArr; vTaskDelay &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
 </UL>
@@ -2132,6 +2128,15 @@ Global Symbols
 <LI><a href="#[163]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskGenericCreate
 </UL>
 <BR>[Called By]<UL><LI><a href="#[11a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MX_FREERTOS_Init
+</UL>
+
+<P><STRONG><a name="[14c]"></a>pWirelessDataManager</STRONG> (Thumb, 90 bytes, Stack size 16 bytes, rf.o(i.pWirelessDataManager))
+<BR><BR>[Stack]<UL><LI>Max Depth = 112<LI>Call Chain = pWirelessDataManager &rArr; xQueueGenericSend &rArr; prvCopyDataToQueue &rArr; xTaskPriorityDisinherit
+</UL>
+<BR>[Calls]<UL><LI><a href="#[91]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xQueueGenericSend
+<LI><a href="#[8c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xQueueGenericReceive
+</UL>
+<BR>[Called By]<UL><LI><a href="#[7c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;WL_startRFComm
 </UL>
 
 <P><STRONG><a name="[167]"></a>pvPortMalloc</STRONG> (Thumb, 296 bytes, Stack size 24 bytes, heap_4.o(i.pvPortMalloc))
@@ -2484,6 +2489,7 @@ Global Symbols
 <LI><a href="#[8e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;AQ_nDataManager
 <LI><a href="#[154]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;startRecv
 <LI><a href="#[13d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;measureTH
+<LI><a href="#[14c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;pWirelessDataManager
 <LI><a href="#[156]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;nRF905_SPI_WR
 <LI><a href="#[14b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;nRF905_SPI_RD
 <LI><a href="#[144]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;WL_WaitPinRiseWithTimeout
@@ -2521,6 +2527,7 @@ Global Symbols
 <LI><a href="#[11a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MX_FREERTOS_Init
 <LI><a href="#[8e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;AQ_nDataManager
 <LI><a href="#[13d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;measureTH
+<LI><a href="#[14c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;pWirelessDataManager
 </UL>
 
 <P><STRONG><a name="[93]"></a>xQueueGiveFromISR</STRONG> (Thumb, 214 bytes, Stack size 24 bytes, queue.o(i.xQueueGiveFromISR))

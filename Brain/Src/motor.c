@@ -133,7 +133,7 @@ void MTR_unReadMotorStatus(uint8_t unMaxMotorNum)
 	for (unMotorIndex = 0; unMotorIndex < unMaxMotorNum; unMotorIndex++)
 	{
 		tMotorComm.unMotorIndex = unMotorIndex;
-		tMotorComm.unPayLoad[0] = COMM_READ_MSR | MTR_COMM_RW_CMD_MASK;
+		tMotorComm.unPayLoad[0] = MOTOR_READ_MSR | MTR_COMM_RW_CMD_MASK;
 		if (xQueueSendToBack(MotorCommQueueHandle, &tMotorComm, portMAX_DELAY) != pdTRUE)
 		{
 			M_handleErr(NOT_USED_FOR_NOW);
@@ -143,7 +143,7 @@ void MTR_unReadMotorStatus(uint8_t unMaxMotorNum)
 	for (unMotorIndex = 0; unMotorIndex < unMaxMotorNum; unMotorIndex++)
 	{
 		tMotorComm.unMotorIndex = 0;	//unMotorIndex;
-		tMotorComm.unPayLoad[0] = COMM_READ_LOCATING_PERIOD | MTR_COMM_RW_CMD_MASK;
+		tMotorComm.unPayLoad[0] = MOTOR_READ_LOCATING_PERIOD | MTR_COMM_RW_CMD_MASK;
 		if (xQueueSendToBack(MotorCommQueueHandle, &tMotorComm, portMAX_DELAY) != pdTRUE)
 		{
 			M_handleErr(NOT_USED_FOR_NOW);
@@ -153,7 +153,7 @@ void MTR_unReadMotorStatus(uint8_t unMaxMotorNum)
 	for (unMotorIndex = 0; unMotorIndex < unMaxMotorNum; unMotorIndex++)
 	{
 		tMotorComm.unMotorIndex = unMotorIndex;
-		tMotorComm.unPayLoad[0] = COMM_READ_BATTERY | MTR_COMM_RW_CMD_MASK;
+		tMotorComm.unPayLoad[0] = MOTOR_READ_BATTERY | MTR_COMM_RW_CMD_MASK;
 		if (xQueueSendToBack(MotorCommQueueHandle, &tMotorComm, portMAX_DELAY) != pdTRUE)
 		{
 			M_handleErr(NOT_USED_FOR_NOW);
@@ -163,7 +163,7 @@ void MTR_unReadMotorStatus(uint8_t unMaxMotorNum)
 	for (unMotorIndex = 0; unMotorIndex < unMaxMotorNum; unMotorIndex++)
 	{
 		tMotorComm.unMotorIndex = unMotorIndex;
-		tMotorComm.unPayLoad[0] = COMM_READ_CURRENT | MTR_COMM_RW_CMD_MASK;
+		tMotorComm.unPayLoad[0] = MOTOR_READ_CURRENT | MTR_COMM_RW_CMD_MASK;
 		if (xQueueSendToBack(MotorCommQueueHandle, &tMotorComm, portMAX_DELAY) != pdTRUE)
 		{
 			M_handleErr(NOT_USED_FOR_NOW);
@@ -173,7 +173,7 @@ void MTR_unReadMotorStatus(uint8_t unMaxMotorNum)
 	for (unMotorIndex = 0; unMotorIndex < unMaxMotorNum; unMotorIndex++)
 	{
 		tMotorComm.unMotorIndex = unMotorIndex;
-		tMotorComm.unPayLoad[0] = COMM_WRITE_RAMP_UP_DUTY;
+		tMotorComm.unPayLoad[0] = MOTOR_WRITE_RAMP_UP_DUTY;
 		tMotorComm.unPayLoad[1] = MTR_tMotor[unMotorIndex].structMotor.unRampUpDuty;
 		if (xQueueSendToBack(MotorCommQueueHandle, &tMotorComm, portMAX_DELAY) != pdTRUE)
 		{
@@ -194,7 +194,7 @@ void MTR_analyzeReadData(MOTOR_SPI_COMM_T* pMotorComm, uint16_t* pMotorCommRxBuf
 	{
 		unReadItem = MTR_GET_RD_ITEM(pMotorComm->unPayLoad[0]);
 		// Validation check
-		if (unReadItem < COMM_READ_MAX)
+		if (unReadItem < MOTOR_READ_MAX)
 		{
 			MTR_tMotor[pMotorComm->unMotorIndex].unValue[unReadItem] = pMotorCommRxBuffer[0];
 			MTR_tMotor[pMotorComm->unMotorIndex].structMotor.unCommOK_CNT++;

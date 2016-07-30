@@ -11,7 +11,7 @@
 #include "main.h"
 
 extern osSemaphoreId AQ_tADC_Cnvt_CpltHandle;
-uint16_t unMaxADC_Value;
+//uint16_t unMaxADC_Value;
 
 int32_t AQ_nDataManager(uint32_t unADC_Value)
 {
@@ -19,9 +19,9 @@ int32_t AQ_nDataManager(uint32_t unADC_Value)
 	static uint16_t unADC_ValueBuff[ADC_VALUE_BUFF_LEN] = {0, };
 	uint16_t unADC_ValueAvg;
 	
-	if (unADC_Value > unMaxADC_Value){
-		unMaxADC_Value = unADC_Value;
-	}
+//	if (unADC_Value > unMaxADC_Value){
+//		unMaxADC_Value = unADC_Value;
+//	}
 	unADC_ValueBuff[unIndex] = (uint16_t)unADC_Value;
 	unIndex++;
 	if (ADC_VALUE_BUFF_LEN == unIndex){
@@ -45,6 +45,6 @@ void AQ_Measure(void const * argument)
 		
 		xSemaphoreTake(AQ_tADC_Cnvt_CpltHandle, portMAX_DELAY);
 		AQ_nDataManager(HAL_ADC_GetValue(&AIR_QUALITY_ADC_HANDLER));
-		osDelay(10);
+		osDelay(20);
 	}
 }

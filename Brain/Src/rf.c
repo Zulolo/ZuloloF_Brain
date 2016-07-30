@@ -9,10 +9,10 @@
 #define __USED_BY_RF__
 #include "global.h"
 #include "rf.h"
+#include "motor.h"
 #include "main.h"
 
 extern osSemaphoreId WL_tNRF905SPI_CommCpltHandle;
-uint8_t unRF905_SPI_RX_Frame[NRF905_RX_PAYLOAD_LEN + 1];
 
 int32_t setNRF905Mode(nRF905Mode_t tNRF905Mode)
 {
@@ -119,6 +119,7 @@ int32_t nRF905_SPI_WR(uint8_t unCMD, const uint8_t* pData, uint16_t unFrameLengt
 uint8_t* nRF905_SPI_RD(uint8_t unCMD, int16_t unFrameLength)
 {
 	static uint8_t unRF905_SPI_TX_Frame[NRF905_RX_PAYLOAD_LEN + 1];
+	static uint8_t unRF905_SPI_RX_Frame[NRF905_RX_PAYLOAD_LEN + 1];
 	
 	if (unFrameLength > NRF905_RX_PAYLOAD_LEN){
 		return NULL;
@@ -184,10 +185,28 @@ static int32_t nRF905CR_Initial(void)
 	return 0;
 }
 
-int32_t nWirelessDataManager(uint8_t* pRxPayload, uint8_t unPayloadLength) 
+uint8_t* pWirelessDataManager(uint8_t* pRxPayload, uint8_t unPayloadLength) 
 {
-//	HAL_GPIO_TogglePin(GPIO_DEMO_LED_PORT, DEMO_LED_Pin);
-	return 0;
+	static uint8_t unDataNeedToResponse[NRF905_TX_PAYLOAD_LEN] = {0, };
+	switch(*(pRxPayload + 1)){
+		case RF_READ_SENSOR_VALUE:
+			unDataNeedToResponse[0] = RF_READ_SENSOR_VALUE;
+			IS_GLOBAL_PARA_ACCESSABLE;
+			memcpy(unDataNeedToResponse + 1, &tSensoreData, sizeof(tSensoreData));
+			RELEASE_GLOBAL_PARA_ACCESS;
+			return unDataNeedToResponse;
+		case RF_WRITE_MOTOR_PAR:
+			switch(*(pRxPayload + 2)){
+				case MOTOR_WRITE_MOTOR_NEED_TO_RUN:
+					return NULL;
+				default:
+					return NULL;				
+			}			
+		default:
+			return (pRxPayload + 1);
+	}
+	
+	return NULL;
 }
 
 int32_t nRF905ChnPwrManager(uint16_t unFrqPwr)
@@ -214,6 +233,7 @@ void WL_startRFComm(void const * argument)
 	static nRF905State_t tNRF905State = NRF905_STATE_STDBY;
 	static uint8_t unHoppingTableIndex = 0;
 	uint8_t* pRxPayload;
+	uint8_t* pTxPayload;
 
 	DISABLE_NRF905_DR_PIN_EXTI;
 	waitPinCleaning();
@@ -255,12 +275,13 @@ void WL_startRFComm(void const * argument)
 				if (NULL == pRxPayload){
 					tNRF905State = NRF905_STATE_END;
 				}else{
-					// Data manage				
-					if (nWirelessDataManager(pRxPayload, NRF905_RX_PAYLOAD_LEN) < 0){
+					// Data manage		
+					pTxPayload = pWirelessDataManager(pRxPayload, NRF905_RX_PAYLOAD_LEN);
+					if (NULL == pTxPayload){
 						tNRF905State = NRF905_STATE_END;
 					}else{
 						// Ready to response
-						if (nRF905SendFrame(pRxPayload + 1, NRF905_RX_PAYLOAD_LEN) < 0 ){
+						if (nRF905SendFrame(pTxPayload, NRF905_RX_PAYLOAD_LEN) < 0 ){
 							tNRF905State = NRF905_STATE_END;
 						}else{
 							tNRF905State = NRF905_STATE_DR;	
