@@ -55,7 +55,8 @@ osSemaphoreId RTN_tNeedToUpdateMotorHandle;
 osSemaphoreId MTR_tMotorSpeedChangedHandle;
 osSemaphoreId WL_tNRF905SPI_CommCpltHandle;
 osSemaphoreId TH_tMeasureData_CommCpltHandle;
-osSemaphoreId tGlobalParaAccessHandle;
+osSemaphoreId GLB_tGlobalParaAccessHandle;
+osSemaphoreId AQ_tADC_Cnvt_CpltHandle;
 
 /* USER CODE BEGIN Variables */
 
@@ -112,9 +113,13 @@ void MX_FREERTOS_Init(void) {
   osSemaphoreDef(TH_tMeasureData_CommCplt);
   TH_tMeasureData_CommCpltHandle = osSemaphoreCreate(osSemaphore(TH_tMeasureData_CommCplt), 1);
 
-  /* definition and creation of tGlobalParaAccess */
-  osSemaphoreDef(tGlobalParaAccess);
-  tGlobalParaAccessHandle = osSemaphoreCreate(osSemaphore(tGlobalParaAccess), 6);
+  /* definition and creation of GLB_tGlobalParaAccess */
+  osSemaphoreDef(GLB_tGlobalParaAccess);
+  GLB_tGlobalParaAccessHandle = osSemaphoreCreate(osSemaphore(GLB_tGlobalParaAccess), 1);
+
+  /* definition and creation of AQ_tADC_Cnvt_Cplt */
+  osSemaphoreDef(AQ_tADC_Cnvt_Cplt);
+  AQ_tADC_Cnvt_CpltHandle = osSemaphoreCreate(osSemaphore(AQ_tADC_Cnvt_Cplt), 1);
 
   /* USER CODE BEGIN RTOS_SEMAPHORES */
   /* add semaphores, ... */
@@ -123,24 +128,16 @@ void MX_FREERTOS_Init(void) {
 	osSemaphoreWait(MTR_tMotorSpeedChangedHandle, 5);
 	osSemaphoreWait(WL_tNRF905SPI_CommCpltHandle, 5);
 	osSemaphoreWait(TH_tMeasureData_CommCpltHandle, 5);
-	
+	osSemaphoreWait(AQ_tADC_Cnvt_CpltHandle, 5);
+
 	xSemaphoreTake(MTR_tMotorSPI_CommCpltHandle, 0);
 	xSemaphoreTake(RTN_tNeedToUpdateMotorHandle, 0);
 	xSemaphoreTake(MTR_tMotorSpeedChangedHandle, 0);
 	xSemaphoreTake(WL_tNRF905SPI_CommCpltHandle, 0);
 	xSemaphoreTake(TH_tMeasureData_CommCpltHandle, 0);
+	xSemaphoreTake(AQ_tADC_Cnvt_CpltHandle, 0);	
 	
-	xSemaphoreTake(tGlobalParaAccessHandle, 0);
-	xSemaphoreTake(tGlobalParaAccessHandle, 0);
-	xSemaphoreTake(tGlobalParaAccessHandle, 0);
-	xSemaphoreTake(tGlobalParaAccessHandle, 0);
-	xSemaphoreTake(tGlobalParaAccessHandle, 0);
-	
-	xSemaphoreGive(tGlobalParaAccessHandle);
-	xSemaphoreGive(tGlobalParaAccessHandle);
-	xSemaphoreGive(tGlobalParaAccessHandle);
-	xSemaphoreGive(tGlobalParaAccessHandle);
-	xSemaphoreGive(tGlobalParaAccessHandle);
+	xSemaphoreGive(GLB_tGlobalParaAccessHandle);
 
   /* USER CODE END RTOS_SEMAPHORES */
 

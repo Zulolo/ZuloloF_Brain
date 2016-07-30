@@ -81,4 +81,5 @@ brain\main.o: ../Inc/usb_otg.h
 brain\main.o: ../Inc/gpio.h
 brain\main.o: ../Inc/motor.h
 brain\main.o: ../Inc/global.h
+brain\main.o: ../Inc/air_quality.h
 brain\main.o: ../Inc/main.h

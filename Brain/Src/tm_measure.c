@@ -93,14 +93,14 @@ int32_t measureTH(void){
 	if (NULL == pTH_Data){
 		return (-1);
 	}else{
-		IS_GLOBAL_PARA_WRITABLE;
+		IS_GLOBAL_PARA_ACCESSABLE;
 		tSensoreData.unHumidity = (((uint16_t)(*pTH_Data)) << BIT_NUM_PER_BYTE) + *(pTH_Data + 1);
 		if ((*(pTH_Data + 2) & 0x80) == 0x80){
 			tSensoreData.nTemperature = 1 - (int16_t)((((uint16_t)(*(pTH_Data + 2) & 0x7F)) << BIT_NUM_PER_BYTE) + *(pTH_Data + 3));
 		}else{
 			tSensoreData.nTemperature = (((uint16_t)(*(pTH_Data + 2) & 0x7F)) << BIT_NUM_PER_BYTE) + *(pTH_Data + 3);
 		}
-		RELEASE_GLOBAL_PARA_WRITE_ACCESS;
+		RELEASE_GLOBAL_PARA_ACCESS;
 		return 0;		
 	}
 }

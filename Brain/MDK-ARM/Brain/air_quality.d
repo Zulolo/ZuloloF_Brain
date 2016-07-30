@@ -59,6 +59,7 @@ brain\air_quality.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h
 brain\air_quality.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/semphr.h
 brain\air_quality.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/event_groups.h
 brain\air_quality.o: ../Inc/tim.h
+brain\air_quality.o: ../Inc/adc.h
 brain\air_quality.o: ../Inc/gpio.h
 brain\air_quality.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
 brain\air_quality.o: ../Inc/air_quality.h

@@ -19,18 +19,8 @@
 #define MOTOR_NUMBER											4
 #define BIT_MASK													0x00000001
 #define BIT_NUM_PER_BYTE									8
-#define IS_GLOBAL_PARA_WRITABLE						xSemaphoreTake(tGlobalParaAccessHandle, portMAX_DELAY);\
-																						xSemaphoreTake(tGlobalParaAccessHandle, portMAX_DELAY);\
-																						xSemaphoreTake(tGlobalParaAccessHandle, portMAX_DELAY);\
-																						xSemaphoreTake(tGlobalParaAccessHandle, portMAX_DELAY);\
-																						xSemaphoreTake(tGlobalParaAccessHandle, portMAX_DELAY)
-#define IS_GLOBAL_PARA_READABLE						xSemaphoreTake(tGlobalParaAccessHandle, portMAX_DELAY)
-#define RELEASE_GLOBAL_PARA_READ_ACCESS		xSemaphoreGive(tGlobalParaAccessHandle)
-#define RELEASE_GLOBAL_PARA_WRITE_ACCESS	xSemaphoreGive(tGlobalParaAccessHandle);\
-																						xSemaphoreGive(tGlobalParaAccessHandle);\
-																						xSemaphoreGive(tGlobalParaAccessHandle);\
-																						xSemaphoreGive(tGlobalParaAccessHandle);\
-																						xSemaphoreGive(tGlobalParaAccessHandle)
+#define IS_GLOBAL_PARA_ACCESSABLE					xSemaphoreTake(GLB_tGlobalParaAccessHandle, portMAX_DELAY)
+#define RELEASE_GLOBAL_PARA_ACCESS				xSemaphoreGive(GLB_tGlobalParaAccessHandle)
 
 typedef struct
 {
@@ -101,7 +91,7 @@ typedef enum
 	TRUE = !FALSE
 } BOOLEAN_T;
 
-extern osSemaphoreId tGlobalParaAccessHandle;
+extern osSemaphoreId GLB_tGlobalParaAccessHandle;
 #endif
 
 

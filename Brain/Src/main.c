@@ -50,6 +50,7 @@
 /* USER CODE BEGIN Includes */
 #define __USED_BY_MAIN__
 #include "motor.h"
+#include "air_quality.h"
 #include "main.h"
 /* USER CODE END Includes */
 
@@ -60,6 +61,7 @@
 extern osSemaphoreId MTR_tMotorSPI_CommCpltHandle;
 extern osSemaphoreId WL_tNRF905SPI_CommCpltHandle;
 extern osSemaphoreId MTR_tMotorSpeedChangedHandle;
+extern osSemaphoreId AQ_tADC_Cnvt_CpltHandle;
 
 /* USER CODE END PV */
 
@@ -89,25 +91,27 @@ void blinkDemoLED(void const * argument)
   }
 }
 
+void initBrainVar(void)
+{
+
+}
+
 void M_handleErr(char* pLog)
 {
 	tErrorStatus = ERROR;
 	HAL_GPIO_WritePin(GPIO_DEMO_LED_PORT, DEMO_LED_Pin, GPIO_PIN_RESET);
 }
 
-//extern osSemaphoreId MTR_tMotorSPI_CommCpltHandle;
-//extern osSemaphoreId RTN_tNeedToUpdateMotorHandle;
-//extern osSemaphoreId MTR_tMotorSpeedChangedHandle;
-//extern osSemaphoreId WL_tNRF905SPI_CommCpltHandle;
-//extern osSemaphoreId tGlobalParaAccessHandle;
-void initBrainVar(void)
+uint16_t BLB_unGetAverage_16Bits(uint16_t* pBuff, uint32_t unLen)
 {
-//	osSemaphoreWait(MTR_tMotorSPI_CommCpltHandle, 5);
-//	osSemaphoreWait(RTN_tNeedToUpdateMotorHandle, 5);
-//	osSemaphoreWait(MTR_tMotorSpeedChangedHandle, 5);
-//	osSemaphoreWait(WL_tNRF905SPI_CommCpltHandle, 5);
-//	osSemaphoreWait(tGlobalParaAccessHandle, 5);
+	uint32_t unIndex;
+	uint32_t unSum = 0;
+	for (unIndex = 0; unIndex < unLen; unIndex++){
+		unSum += pBuff[unIndex];
+	}
+	return (unSum / unLen);
 }
+
 /* USER CODE END 0 */
 
 int main(void)
@@ -313,8 +317,13 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc)
 			portEND_SWITCHING_ISR(tHigherPriorityTaskWoken);
 		}		
 	}else if (hadc->Instance == AIR_QUALITY_ADC_HANDLER.Instance) {
+		HAL_ADC_Stop_IT(&AIR_QUALITY_ADC_HANDLER);
 		HAL_GPIO_WritePin(AIR_QLT_LED_ENABLE_GPIO_Port, AIR_QLT_LED_ENABLE_Pin, GPIO_PIN_SET);
-		tSensoreData.unAirQuality = HAL_ADC_GetValue(&AIR_QUALITY_ADC_HANDLER);
+		tHigherPriorityTaskWoken = pdFALSE;
+		xSemaphoreGiveFromISR(AQ_tADC_Cnvt_CpltHandle, &tHigherPriorityTaskWoken);
+		if(tHigherPriorityTaskWoken == pdTRUE){
+			portEND_SWITCHING_ISR(tHigherPriorityTaskWoken);
+		}
 	}
 }
 
