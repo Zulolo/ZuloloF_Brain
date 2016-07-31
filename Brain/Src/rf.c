@@ -205,8 +205,6 @@ uint8_t* pWirelessDataManager(uint8_t* pRxPayload, uint8_t unPayloadLength)
 		default:
 			return (pRxPayload + 1);
 	}
-	
-	return NULL;
 }
 
 int32_t nRF905ChnPwrManager(uint16_t unFrqPwr)
@@ -284,6 +282,7 @@ void WL_startRFComm(void const * argument)
 						if (nRF905SendFrame(pTxPayload, NRF905_RX_PAYLOAD_LEN) < 0 ){
 							tNRF905State = NRF905_STATE_END;
 						}else{
+//							osDelay(5);
 							tNRF905State = NRF905_STATE_DR;	
 							tRemoteControlMap.unNRF905CommRecvFrameErr = 0;
 							tRemoteControlMap.unNRF905CommRecvFrameOK++;

@@ -45,6 +45,6 @@ void AQ_Measure(void const * argument)
 		
 		xSemaphoreTake(AQ_tADC_Cnvt_CpltHandle, portMAX_DELAY);
 		AQ_nDataManager(HAL_ADC_GetValue(&AIR_QUALITY_ADC_HANDLER));
-		osDelay(20);
+		osDelay(50);
 	}
 }
