@@ -107,6 +107,7 @@ int32_t measureTH(void){
 	
 void TH_Measure(void const * argument)
 {
+	osDelay(2000);
 	while(1){
 		measureTH();
 		osDelay(2000);
